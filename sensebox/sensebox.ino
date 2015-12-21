@@ -15,7 +15,6 @@ const int soundSensor = A0;
 //Barometer variables
 float pressure;
 float atm;
-float altitude;
 Barometer myBarometer;
 
 //Accelerometer variables
@@ -57,7 +56,7 @@ void setup() {
   Wire.begin();
   //Initialize Accelerometer
   accelgyro.initialize();
-  Serial.println(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+  //Serial.println(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
   delay(1000);
 
@@ -66,7 +65,6 @@ void setup() {
   
   //Init barometer
   myBarometer.init();
-
 
   // Initalize SD card:
   //Serial.print("init sd card...");
@@ -89,7 +87,7 @@ void setup() {
   // If the file opened okay, write to it:
   if (dataFile) {
     //Serial.print("Writing to test.txt...");
-    dataFile.println("Logging: row, lat, lon, time, sound, brightness, vibration, pressure.");
+    dataFile.println("Logging: row, lat, lon, time, sound, brightness, vibration, altitude.");
     // close the file:
     dataFile.close();
     //Serial.println("done.");
@@ -111,7 +109,6 @@ void loop() {
       //Serial.print(buttonPushCounter);
 
     } else {
-      Serial.println(F("OFF"));
     }
     delay(50);
   }
@@ -220,21 +217,23 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print((abs(Axyz[0]) + abs(Axyz[1]) + abs(Axyz[2])), 2);
         dataFile.print(seperator);
-        dataFile.print(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
+        dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
 
         // close the file:
         dataFile.close();
 
         rowCounter = rowCounter + 1;
-        //Serial.println(F("done writing."));
+        Serial.println(F("done writing."));
       } else {
         // if the file didn't open, print an error:
-        //Serial.println(F("error opening file"));
+        Serial.println(F("error opening file"));
       }
 
     }
   } else {
     digitalWrite(LED, LOW);   // turn the LED on (HIGH is the voltage level)
+    Serial.println(F("OFF"));
+
   }
 
 }
