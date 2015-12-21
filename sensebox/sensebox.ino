@@ -38,7 +38,7 @@ int rowCounter = 1;
 SoftwareSerial ss(2, 3);
 
 //Button variables
-const int buttonPin = 8;     // the number of the pushbutton pin
+const int buttonPin = 8;
 int buttonState = 0;
 int lastButtonState = 0; // variable for reading the pushbutton status
 int isOn;
@@ -177,26 +177,9 @@ void loop() {
       // GPS reading done
       newData = false;
 
-      //read sensors
-      //reading done directly due to memory limitations
-      //Serial.println("reading sensors");
-
-      //temp and humidity
-
-      //Sound
-      //loudness = analogRead(SOUND_SENSOR);
-
-      //Light
-      //brightness = TSL2561.readVisibleLux();
-
-      //Accel/Gyro
-
+      // Get Accel/Gyro data
       getAccel_Data();
       getGyro_Data();
-      //
-      //      Serial.println("Vib index:");
-      //      vib_index = abs(Axyz[0]) + abs(Axyz[1]) + abs(Axyz[2]);
-      //      Serial.println(abs(Axyz[0]) + abs(Axyz[1]) + abs(Axyz[2]));
 
       //Save collected data to sd card
       dataFile = SD.open("test.csv", FILE_WRITE);
