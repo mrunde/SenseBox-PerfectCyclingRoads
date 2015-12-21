@@ -31,16 +31,16 @@ TinyGPS gps;
 
 File dataFile;
 String dataRow;
-String seperator = ",";
+String seperator = ";";
 String dattim = "noval";
 int rowCounter = 1;
 
 SoftwareSerial ss(2, 3);
 
 //Button variables
-const int buttonPin = 8;
+const int buttonPin = 8;// the number of the pushbutton pin
 int buttonState = 0;
-int lastButtonState = 0; // variable for reading the pushbutton status
+int lastButtonState = 0;
 int isOn;
 
 /*
@@ -87,7 +87,7 @@ void setup() {
   // If the file opened okay, write to it:
   if (dataFile) {
     //Serial.print("Writing to test.txt...");
-    dataFile.println("Logging: row, lat, lon, time, sound, brightness, vibration, altitude.");
+    dataFile.println("row;lat;lon;timestamp;sound;brightness;vibration;altitude");
     // close the file:
     dataFile.close();
     //Serial.println("done.");
@@ -177,7 +177,7 @@ void loop() {
       // GPS reading done
       newData = false;
 
-      // Get Accel/Gyro data
+      //Accel/Gyro
       getAccel_Data();
       getGyro_Data();
 
@@ -216,7 +216,6 @@ void loop() {
   } else {
     digitalWrite(LED, LOW);   // turn the LED on (HIGH is the voltage level)
     Serial.println(F("OFF"));
-
   }
 
 }
