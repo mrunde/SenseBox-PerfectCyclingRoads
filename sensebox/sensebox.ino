@@ -87,7 +87,7 @@ void setup() {
   // If the file opened okay, write to it:
   if (dataFile) {
     //Serial.print("Writing to test.txt...");
-    dataFile.println("row;lat;lon;timestamp;sound;brightness;vibration;altitude");
+    dataFile.println("row;lat;lon;speed;timestamp;sound;brightness;vibration;altitude");
     // close the file:
     dataFile.close();
     //Serial.println("done.");
@@ -156,6 +156,9 @@ void loop() {
       flat == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flat, 6;
       //Serial.print("LON = ");
       flon == TinyGPS::GPS_INVALID_F_ANGLE ? 0.0 : flon, 6;
+      //Speed
+      gps.f_speed_kmph() == TinyGPS::GPS_INVALID_F_SPEED ? 0 : gps.f_speed_kmph();
+
       // Serial.println("DATE & TIME:");
 
       // print date
@@ -192,13 +195,15 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(flon, 6);
         dataFile.print(seperator);
+        dataFile.print(gps.f_speed_kmph(), 2);
+        dataFile.print(seperator);
         dataFile.print(dattim);
         dataFile.print(seperator);
         dataFile.print(analogRead(soundSensor));
         dataFile.print(seperator);
         dataFile.print(TSL2561.readVisibleLux());
         dataFile.print(seperator);
-        dataFile.print((abs(Axyz[0]) + abs(Axyz[1]) + abs(Axyz[2])), 2);
+        dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */abs(Axyz[2])), 2);
         dataFile.print(seperator);
         dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
 
