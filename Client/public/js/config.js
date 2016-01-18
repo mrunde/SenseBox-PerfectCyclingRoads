@@ -9,7 +9,7 @@ function getMapboxAccessToken() {
 
 // OpenSenseMap-API
 function getURL() {
-    return "http://opensensemap.org:8000/";
+    return "http://opensensemap.org:8000";
 }
 
 // SenseBoxes
