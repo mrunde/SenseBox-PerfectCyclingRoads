@@ -22,6 +22,8 @@ $( document ).ready(function() {
         layer.bindPopup(popupContent);
 	};*/
 
+
+
     var boxData = [];
     var senseBoxes = getBoxes();
     var i=0;
@@ -91,9 +93,8 @@ $( document ).ready(function() {
             $.each( data, function( i, item ) {
                 boxData[0].lightValues.push(parseFloat(item.value));
             });
+            drawMarkers(boxData);
         });
-
-        drawMarkers(boxData);
 
     };
 
@@ -102,25 +103,26 @@ $( document ).ready(function() {
 
         for(var k=0; k<newBoxData.length; k++) {
 
-            console.log(newBoxData[k].altValues);
+            console.log(newBoxData[k].latValues);
+            console.log(newBoxData[k].lngValues);
 
-            for(var j=0; j<newBoxData[i].length; j++) {
+            for(var j=0; j<newBoxData[k].lngValues.length; j++) {
                 L.mapbox.featureLayer({
                     type: 'Feature',
                     geometry: {
                         type: 'Point',
                         coordinates: [
-                          newBoxData[i].latValues[j], newBoxData[i].lngValues[j]
+                            newBoxData[k].lngValues[j], newBoxData[k].latValues[j], 
                         ]
                     },
                     properties: {
-                        'title': 'SenseBoxId: ' + newBoxData[i].box_id ,
-                        /*'description': "Data: " +
+                        'title': 'SenseBoxId: ',
+                        'description': "Data: ", /*
                             newBoxData[i].altValues[j] + "; " +
                             newBoxData[i].vibrationValues[j] + "; " +
                             newBoxData[i].soundValues[j] + "; " +
                             newBoxData[i].lightValues[j],*/
-                        'marker-size': 'small',
+                        'marker-size': 'large',
                         'marker-color': '#FF3300',
                         'marker-symbol': 'circle'
                     }

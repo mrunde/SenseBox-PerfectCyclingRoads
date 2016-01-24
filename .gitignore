@@ -1,4 +1,4 @@
-/Client/node_modules/*
-/Client/public/lib/*
+/Server/node_modules/*
+/Server/public/lib/*
 /SenseBox-Pusher/node_modules/*
 .DS_Store
