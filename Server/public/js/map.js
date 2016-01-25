@@ -54,7 +54,7 @@ $( document ).ready(function() {
         });
     }
 
-    
+
     function drawMarkers() {
         boxes.forEach(function (box, key) {
             box.tracks.forEach(function (track, key) {
@@ -73,7 +73,6 @@ $( document ).ready(function() {
                                 'title': '<h5><span class="label label-warning">' + box._id + '</span> <small>BoxId</small></h5>' +
                                     '<h5><span class="label label-success">' + track._id + '</span> <small>TrackId</small></h5>',
                                 'description': '<table>' +
-                                    '<tr><th>Longitude</th><td><kbd>' + measurement.lng + '</kbd></td></tr>' +
                                     '<tr><th>Longitude</th><td><kbd>' + measurement.lng + '</kbd></td></tr>' +
                                     '<tr><th>Latitude</th><td><kbd>' + measurement.lat + '</kbd></td></tr>' +
                                     '<tr><th>Altitude</th><td><kbd>' + measurement.altitude + '</kbd></td></tr>' +
