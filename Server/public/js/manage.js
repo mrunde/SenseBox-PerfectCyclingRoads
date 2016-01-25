@@ -11,9 +11,11 @@ $( document ).ready(function() {
     function checkBoxId() {
         if(currentSenseboxId == null) {
             $( "#login" ).show();
+            $( "#newSensebox" ).show();
             $( "#sensebox" ).hide();
         } else {
             $( "#login" ).hide();
+            $( "#newSensebox" ).hide();
             $( "#sensebox" ).show();
         }
     }
@@ -39,7 +41,12 @@ $( document ).ready(function() {
 
             });
         }
-        $('#myModal').modal('hide');
+        $('#newSenseboxModal').modal('hide');
+    });
+
+    // CREATE NEW TRACK
+    $( "#submitTrackButton" ).click(function() {
+        $('#newTrackModal').modal('hide');
     });
 
     // LOGOUT
