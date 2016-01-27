@@ -4,7 +4,7 @@
 
 // Mapbox
 function getMapboxAccessToken() {
-    return "pk.eyJ1IjoibmljaG85MCIsImEiOiJjaWdrdmswOTQwMDd0dmlrdHFibzQzNjU1In0.s96Fw4mPajLSSu6Azfzgfw";
+    return "pk.eyJ1IjoibmljaG85MCIsImEiOiJjaWp3enA1NmMwMDFzdmNtMGczdGI4YTdxIn0.WKPEegyEq-K_65K-OJ0mgg";
 };
 
 // API
