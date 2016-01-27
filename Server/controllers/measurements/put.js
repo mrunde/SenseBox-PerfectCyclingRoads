@@ -1,5 +1,6 @@
 require('../../models/measurement');
 
+var _ = require('underscore');
 var mongoose = require('mongoose');
 var Measurement = mongoose.model('Measurement');
 

@@ -4,12 +4,12 @@
 $( document ).ready(function() {
 
     // INIT
-    var currentSenseboxId = null;
+    var currentSensebox = undefined;
     checkBoxId();
 
 
     function checkBoxId() {
-        if(currentSenseboxId == null) {
+        if(currentSensebox == undefined) {
             $( "#login" ).show();
             $( "#newSensebox" ).show();
             $( "#sensebox" ).hide();
@@ -17,7 +17,8 @@ $( document ).ready(function() {
             $( "#login" ).hide();
             $( "#newSensebox" ).hide();
             $( "#sensebox" ).show();
-            $( "#boxId" ).html(currentSenseboxId);
+            $( "#boxId" ).html(currentSensebox._id);
+            $( "#boxName" ).html(currentSensebox.name);
         }
     }
 
@@ -25,7 +26,7 @@ $( document ).ready(function() {
     $( "#loginButton" ).click(function() {
         if($( "#senseboxIdInput" ).val() != "") {
             $.get(getURL() + "/boxes/" + $( "#senseboxIdInput" ).val(), function(data) {
-                currentSenseboxId = data._id;
+                currentSensebox = data;
                 checkBoxId();
             });
         }
@@ -35,13 +36,54 @@ $( document ).ready(function() {
     $( "#submitSenseboxButton" ).click(function() {
         if($( "#nameInput" ).val() != "") {
             $.post(getURL() + "/boxes", { name: $( "#nameInput" ).val(), boxType: $( "#boxTypeInput" ).val() }, function(data) {
-                currentSenseboxId = data._id;
-                $( "#boxId" ).html(currentSenseboxId);
+                currentSensebox = data;
+                $( "#boxId" ).html(currentSensebox.name);
                 checkBoxId();
 
             });
         }
         $('#newSenseboxModal').modal('hide');
+    });
+
+    // EDIT SENSEBOX
+    $( "#editSensebox" ).click(function() {
+        $( "#nameInput_2" ).val(currentSensebox.name);
+        $( "#boxTypeInput_2" ).val(currentSensebox.boxType);
+    });
+
+    // SAVE SENSEBOX
+    $( "#saveSenseboxButton" ).click(function() {
+        if($( "#nameInput_2" ).val() != "") {
+            $.ajax({
+                url: getURL() + "/boxes/" + currentSensebox._id ,
+                type: 'PUT',
+                data: JSON.stringify({
+                    name: $( "#nameInput_2" ).val(),
+                    boxType: $( "#boxTypeInput_2" ).val()
+                }),
+                contentType: 'application/json; charset=UTF-8',
+                async: false,
+                success: function(data) {
+                    currentSensebox = data;
+                    $( "#boxId" ).html(currentSensebox.name);
+                    checkBoxId();
+                }
+            });
+        }
+        $('#senseboxModal').modal('hide');
+    });
+
+    // SHOW/EDIT TRACKS
+    $( "#editTracks" ).click(function() {
+        $('#tracks tbody').remove();
+        $.get(getURL() + "/boxes/" + currentSensebox._id + "/tracks", function(data) {
+            for(var i=0; i<data.length; i++) {
+                var row = '<tr><td><span class="label label-success" style="font-size: 14px;">' + data[i]._id + '</span></td>' +
+                    '<td>' + data[i].created + '</td>' +
+                    '<td>delete</td></tr>';
+                $( row ).appendTo( $( "#tracks" ) );
+            }
+        });
     });
 
     // CREATE NEW TRACK
@@ -53,7 +95,7 @@ $( document ).ready(function() {
 
     // LOGOUT
     $( "#logoutButton" ).click(function() {
-        currentSenseboxId = null;
+        currentSensebox = undefined;
         checkBoxId();
     });
 
@@ -68,7 +110,6 @@ $( document ).ready(function() {
             alert('FileReader are not supported in this browser!');
         }
     }
-
 
     // CSV-TO-JSON-CONVERTER
     function getAsText(fileToRead) {
@@ -115,17 +156,17 @@ $( document ).ready(function() {
     function uploadTrack(measurements){
 
         $.ajax({
-            url: getURL() + "/boxes/" + currentSenseboxId + "/tracks",
+            url: getURL() + "/boxes/" + currentSensebox._id + "/tracks",
             global: false,
             type: 'POST',
-            data: { "box_id": currentSenseboxId },
+            data: { "box_id": currentSensebox._id },
             async: false,
             success: function(data) {
                 var track = data;
                 measurements.forEach(function (measurement, key) {
                     console.log(measurement);
                     $.ajax({
-                        url: getURL() + "/boxes/" + currentSenseboxId + "/tracks/" + track._id + "/measurements",
+                        url: getURL() + "/boxes/" + currentSensebox._id + "/tracks/" + track._id + "/measurements",
                         global: false,
                         type: 'POST',
                         data: {
@@ -151,4 +192,6 @@ $( document ).ready(function() {
         });
         drawMarkers();
     };
+
+
 });

@@ -1,5 +1,6 @@
 require('../../models/sensebox');
 
+var _ = require('underscore');
 var mongoose = require('mongoose');
 var Sensebox = mongoose.model('Sensebox');
 

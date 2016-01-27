@@ -16,3 +16,18 @@ body {
 .content {
     width: 100%;
 }
+
+.left {
+    text-align: left;
+    float: left;
+    margin-left: -15px;
+}
+
+.right {
+    text-align: right;
+    float: right;
+}
+
+.boxId {
+    margin-bottom: 20px;
+}
