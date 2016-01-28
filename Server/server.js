@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, '/public')));
 
 
 // DATABASE CONNECTION
-mongoose.connect('mongodb://localhost/osm_mobile');
+mongoose.connect('mongodb://127.0.0.1/osm_mobile');
 var db = mongoose.connection;
 
 db.on('error', function callback(){
