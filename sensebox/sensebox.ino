@@ -203,7 +203,7 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(TSL2561.readVisibleLux());
         dataFile.print(seperator);
-        dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */abs(Axyz[2])), 2);
+        dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */abs(Axyz[1])), 2);
         dataFile.print(seperator);
         dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
 
