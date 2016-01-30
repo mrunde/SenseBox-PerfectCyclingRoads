@@ -102,7 +102,7 @@ $( document ).ready(function() {
                                     measurement.lng, measurement.lat,
                                 ]
                             },
-                            properties: {
+                            'properties': {
                                 'title': '<h5><span class="label label-warning">' + box._id + '</span> <small>BoxId</small></h5>' +
                                     '<h5><span class="label label-success">' + track._id + '</span> <small>TrackId</small></h5>',
                                 'description': '<div class="panel panel-default"><table class="table table-striped">' +
@@ -115,73 +115,48 @@ $( document ).ready(function() {
                                     '<tr><th>Brightness</th><td>' + measurement.brightness + '</td></tr>' +
                                     '<tr><th>IR</th><td>' + measurement.ir + '</td></tr>' +
                                     '<tr><th>UV</th><td>' + measurement.uv + '</td></tr>' +
-                                    '</table></div>'/*,
-                                    'marker-size': 'large',
-                                    'marker-color': '#FF3300',
-                                    'marker-symbol': 'circle'*/
+                                    '</table></div>',
+                                'icon': {
+                                    'iconUrl': calcRoadCondition(measurement.speed, measurement.vibration),
+                                    'iconSize': [12, 12], // size of the icon
+                                    'iconAnchor': [6, 6], // point of the icon which will correspond to marker's location
+                                    'popupAnchor': [0, -6], // point from which the popup should open relative to the iconAnchor
+                                    'className': 'dot'
+                                }
                             }
                         }
                     );
-
-                    /*
-                    L.mapbox.featureLayer(
-                        {
-                            type: 'Feature',
-                            geometry: {
-                                type: 'Point',
-                                coordinates: [
-                                    measurement.lng, measurement.lat,
-                                ]
-                            },
-                            properties: {
-                                'title': '<h5><span class="label label-warning">' + box._id + '</span> <small>BoxId</small></h5>' +
-                                    '<h5><span class="label label-success">' + track._id + '</span> <small>TrackId</small></h5>',
-                                'description': '<table>' +
-                                    '<tr><th>Longitude</th><td><kbd>' + measurement.lng + '</kbd></td></tr>' +
-                                    '<tr><th>Latitude</th><td><kbd>' + measurement.lat + '</kbd></td></tr>' +
-                                    '<tr><th>Altitude</th><td><kbd>' + measurement.altitude + '</kbd></td></tr>' +
-                                    '<tr><th>Speed</th><td><kbd>' + measurement.speed + '</kbd></td></tr>' +
-                                    '<tr><th>Vibration</th><td><kbd>' + measurement.vibration + '</kbd></td></tr>' +
-                                    '<tr><th>Sound</th><td><kbd>' + measurement.sound + '</kbd></td></tr>' +
-                                    '<tr><th>Brightness</th><td><kbd>' + measurement.brightness + '</kbd></td></tr>' +
-                                    '<tr><th>IR</th><td><kbd>' + measurement.ir + '</kbd></td></tr>' +
-                                    '<tr><th>UV</th><td><kbd>' + measurement.uv + '</kbd></td></tr>' +
-                                    '</table>'/*,
-                                    'marker-size': 'large',
-                                    'marker-color': '#FF3300',
-                                    'marker-symbol': 'circle'
-                            }
-                        }, {
-                            pointToLayer: function(feature, latlon) {
-                                return L.circleMarker(latlon, {
-                                    fillColor: '#FF3300',
-                                    radius: 5,
-                                    weight: 1,
-                                    color: '#FF3300',
-                                    opacity: 1,
-                                    fillOpacity: 0.8
-                                });
-                            }
-                        }
-                    ).addTo(map);*/
                 });
             });
         });
 
-        L.mapbox.featureLayer(geoJsonFeatures,
-            {
-                pointToLayer: function(feature, latlon) {
-                    return L.circleMarker(latlon, {
-                        fillColor: '#FF3300',
-                        radius: 5,
-                        weight: 1,
-                        color: '#FF3300',
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    });
-                }
-            }
-        ).addTo(map);
+        var myLayer = L.mapbox.featureLayer().addTo(map);
+        myLayer.on('layeradd', function(e) {
+            var marker = e.layer;
+            var feature = marker.feature;
+            marker.setIcon(L.icon(feature.properties.icon));
+        });
+
+        // Add features to the map
+        myLayer.setGeoJSON(geoJsonFeatures);
     };
+
+    /*
+        Function to calculate the condition of the road based on the measured parameters
+        Returns the icon corresponding to the calculated road condition
+    */
+    function calcRoadCondition(speed, vibration) {
+        var icon;
+
+        if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
+            // Perfect Cycling Road
+            icon = '/img/circle_green.png';
+        } else {
+            // Horrible Cycling Road
+            icon = '/img/circle_red.png';
+        }
+
+        return icon;
+    }
 
 });
