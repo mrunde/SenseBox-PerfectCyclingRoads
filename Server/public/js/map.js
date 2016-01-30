@@ -124,10 +124,6 @@ $( document ).ready(function() {
         });
         markers.setGeoJSON(geoJsonFeatures);
 
-        /*var markers = L.mapbox.featureLayer()
-            .setGeoJSON(geoJsonFeatures)
-            .addTo(map);*/
-
         $('.menu-ui a').on('click', function() {
             // For each filter link, get the 'data-filter' attribute value.
             var filter = $(this).data('filter');
