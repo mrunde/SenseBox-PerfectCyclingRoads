@@ -1,12 +1,28 @@
 "use strict"
 
+function showTrack(senseboxId, trackId){
+    console.log(trackId);
+    // TO-DO
+};
+
+function deleteTrack(senseboxId, trackId) {
+    $.ajax({
+        url: getURL() + "/boxes/" + senseboxId + "/tracks/" + trackId,
+        global: false,
+        type: 'DELETE',
+        async: false,
+        success: function(data) {
+            $('#trackModal').modal('hide');
+        }
+    });
+};
+
 // MANAGE
 $( document ).ready(function() {
 
     // INIT
     var currentSensebox = undefined;
     checkBoxId();
-
 
     function checkBoxId() {
         if(currentSensebox == undefined) {
@@ -80,7 +96,8 @@ $( document ).ready(function() {
             for(var i=0; i<data.length; i++) {
                 var row = '<tr><td><span class="label label-success" style="font-size: 14px;">' + data[i]._id + '</span></td>' +
                     '<td>' + data[i].created + '</td>' +
-                    '<td>delete</td></tr>';
+                    '<td><button type="button" class="btn btn-default" onclick="highlightTrack(\'' + data[i]._id + '\')"><i class="fa fa-map"></i></button></td>' +
+                    '<td><button type="button" class="btn btn-danger" onclick="deleteTrack(\'' + currentSensebox._id + '\', \'' + data[i]._id + '\')"><i class="fa fa-trash"></i></button></td></tr>';
                 $( row ).appendTo( $( "#tracks" ) );
             }
         });
@@ -192,6 +209,5 @@ $( document ).ready(function() {
         });
         drawMarkers();
     };
-
 
 });
