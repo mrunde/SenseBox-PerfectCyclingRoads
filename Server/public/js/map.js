@@ -67,23 +67,6 @@ $( document ).ready(function() {
         });
     }
 
-    //
-
-    //var geoJsonLayer = L.geoJson(rodents1);
-    /*
-
-    var geoJsonFeature = rodents1;
-    var geoJsonLayer = L.geoJson(rodents1);
-
-    var map = L.mapbox.map('map','mapbox.streets')
-        .setView([42.35,-71.08],13);
-
-    markers.addLayer(geoJsonLayer);
-    map.addLayer(markers);
-    */
-
-
-
     function drawMarkers() {
 
         var geoJsonFeatures = [];
@@ -116,8 +99,10 @@ $( document ).ready(function() {
                                     '<tr><th>IR</th><td>' + measurement.ir + '</td></tr>' +
                                     '<tr><th>UV</th><td>' + measurement.uv + '</td></tr>' +
                                     '</table></div>',
+                                'perfect': isPerfectCondition(measurement.speed, measurement.vibration),
+                                'poor': isPoorCondition(measurement.speed, measurement.vibration),
                                 'icon': {
-                                    'iconUrl': calcRoadCondition(measurement.speed, measurement.vibration),
+                                    'iconUrl': calcRoadConditionIcon(measurement.speed, measurement.vibration),
                                     'iconSize': [12, 12], // size of the icon
                                     'iconAnchor': [6, 6], // point of the icon which will correspond to marker's location
                                     'popupAnchor': [0, -6], // point from which the popup should open relative to the iconAnchor
@@ -130,33 +115,77 @@ $( document ).ready(function() {
             });
         });
 
-        var myLayer = L.mapbox.featureLayer().addTo(map);
-        myLayer.on('layeradd', function(e) {
+        // Add markers to the map
+        var markers = L.mapbox.featureLayer().addTo(map);
+        markers.on('layeradd', function(e) {
             var marker = e.layer;
             var feature = marker.feature;
             marker.setIcon(L.icon(feature.properties.icon));
         });
+        markers.setGeoJSON(geoJsonFeatures);
 
-        // Add features to the map
-        myLayer.setGeoJSON(geoJsonFeatures);
+        /*var markers = L.mapbox.featureLayer()
+            .setGeoJSON(geoJsonFeatures)
+            .addTo(map);*/
+
+        $('.menu-ui a').on('click', function() {
+            // For each filter link, get the 'data-filter' attribute value.
+            var filter = $(this).data('filter');
+            $(this).addClass('active').siblings().removeClass('active');
+            markers.setFilter(function(f) {
+                // If the data-filter attribute is set to "all", return
+                // all (true). Otherwise, filter on markers that have
+                // a value set to true based on the filter name.
+                return (filter === 'all') ? true : f.properties[filter] === true;
+            });
+            return false;
+        });
     };
 
     /*
         Function to calculate the condition of the road based on the measured parameters
-        Returns the icon corresponding to the calculated road condition
+        Returns the icon file path
     */
-    function calcRoadCondition(speed, vibration) {
+    function calcRoadConditionIcon(speed, vibration) {
         var icon;
 
         if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
             // Perfect Cycling Road
             icon = '/img/circle_green.png';
         } else {
-            // Horrible Cycling Road
+            // Poor Cycling Road
             icon = '/img/circle_red.png';
         }
 
         return icon;
+    }
+
+    /*
+        Function to calculate whether the condition of the road is perfect
+        Returns true or false
+    */
+    function isPerfectCondition(speed, vibration) {
+        if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
+            // Perfect Cycling Road
+            return true;
+        } else {
+            // Poor Cycling Road
+            return false;
+        }
+    }
+
+    /*
+        Function to calculate whether the condition of the road is poor
+        Returns true or false
+    */
+    function isPoorCondition(speed, vibration) {
+        if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
+            // Perfect Cycling Road
+            return false;
+        } else {
+            // Poor Cycling Road
+            return true;
+        }
     }
 
 });
