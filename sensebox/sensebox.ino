@@ -3,14 +3,17 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-#include <Digital_Light_TSL2561.h>
 #include "Barometer.h"
 #include "I2Cdev.h"
 #include "MPU6050.h"
+#include <Adafruit_Sensor.h>
+#include "Adafruit_TSL2591.h"
 
 const int LED = 7;
 const int chipSelect = 4;
 const int soundSensor = A0;
+
+Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier (for your use later)
 
 //Barometer variables
 float pressure;
@@ -61,7 +64,7 @@ void setup() {
   delay(1000);
 
   // Initialize Light Sensor
-  TSL2561.init();
+  //TSL2561.init();
   
   //Init barometer
   myBarometer.init();
@@ -201,8 +204,8 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(analogRead(soundSensor));
         dataFile.print(seperator);
-        dataFile.print(TSL2561.readVisibleLux());
-        dataFile.print(seperator);
+        //dataFile.print(TSL2561.readVisibleLux());
+        //dataFile.print(seperator);
         dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */abs(Axyz[1])), 2);
         dataFile.print(seperator);
         dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
