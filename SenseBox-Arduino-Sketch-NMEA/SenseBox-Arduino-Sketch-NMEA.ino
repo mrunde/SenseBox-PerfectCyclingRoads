@@ -65,6 +65,11 @@ void setup() {
   //Init barometer
   myBarometer.init();
 
+  //Init light sensor
+  tsl.begin()
+  tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
+  tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
+
   // Initalize SD card:
   //Serial.print("init sd card...");
 
@@ -122,21 +127,21 @@ void loop() {
     //Serial.println("starting gps reading");
 
     // Parse GPS data for one second and report some key values
-    
-  if (ss.available())                     // if date is coming from software serial port ==> data is coming from SoftSerial shield
-  {
-    while (ss.available())              // reading data into char array
-    {
-      buffer[count++] = ss.read();    // writing data into array
-      if (count == 64)break;
-    }
-    Serial.write(buffer, count);     // if no data transmission ends, write buffer to hardware serial port
-    writeData();
-    clearBufferArray();                         // call clearBufferArray function to clear the stored data from the array
-    count = 0;                                  // set counter of while loop to zero
-  }
 
-    
+    if (ss.available())                     // if date is coming from software serial port ==> data is coming from SoftSerial shield
+    {
+      while (ss.available())              // reading data into char array
+      {
+        buffer[count++] = ss.read();    // writing data into array
+        if (count == 64)break;
+      }
+      Serial.write(buffer, count);     // if no data transmission ends, write buffer to hardware serial port
+      writeData();
+      clearBufferArray();                         // call clearBufferArray function to clear the stored data from the array
+      count = 0;                                  // set counter of while loop to zero
+    }
+
+
   } else {
     digitalWrite(LED, LOW);   // turn the LED on (HIGH is the voltage level)
     Serial.println(F("OFF"));
@@ -164,7 +169,7 @@ void writeData()
 {
   //First, get data from accelerometer
   getAccel_Data();
-  
+
   //Save collected data to sd card
   dataFile = SD.open("test.csv", FILE_WRITE);
 
@@ -175,6 +180,8 @@ void writeData()
     dataFile.print((const char *) buffer);
     dataFile.print(seperator);
     dataFile.print(analogRead(soundSensor));
+    dataFile.print(seperator);
+    dataFile.print(tsl.getLuminosity(TSL2591_VISIBLE));
     dataFile.print(seperator);
     dataFile.print(Axyz[0], 2);
     dataFile.print(seperator);

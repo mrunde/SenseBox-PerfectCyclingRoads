@@ -64,8 +64,11 @@ void setup() {
   delay(1000);
 
   // Initialize Light Sensor
-  //TSL2561.init();
-  
+  //Init light sensor
+  tsl.begin()
+  tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
+  tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
+
   //Init barometer
   myBarometer.init();
 
@@ -120,7 +123,7 @@ void loop() {
   if (isOn == 1) {
     digitalWrite(LED, HIGH);
     bool newData = false;
-    
+
     ss.begin(9600);
 
     //Serial.println("starting gps reading");
@@ -141,7 +144,7 @@ void loop() {
     }
 
     ss.end();
-    
+
 
     if (newData)
 
@@ -179,7 +182,7 @@ void loop() {
         dattim = String(sz);
         //Serial.print(dattim);
       }
-      
+
       // GPS reading done
       newData = false;
 
@@ -204,8 +207,8 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(analogRead(soundSensor));
         dataFile.print(seperator);
-        //dataFile.print(TSL2561.readVisibleLux());
-        //dataFile.print(seperator);
+        dataFile.print(tsl.getLuminosity(TSL2591_VISIBLE));
+        dataFile.print(seperator);
         dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */abs(Axyz[1])), 2);
         dataFile.print(seperator);
         dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
