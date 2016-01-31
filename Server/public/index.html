@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <meta name="description" content="This application was build during the course &quot;An Introduction into Perfect Cycling Roads &quot;">
+    <meta name="author" content="Nicholas Schietsl, André Wieghardt">
+    <!-- <link rel="icon" href="../../favicon.ico">-->
+    <title>SenseBox - Perfect Cycling Roads</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Font-Awesome -->
+    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <!-- Mapbox -->
+    <link href='lib/mapbox.js/mapbox.css' rel="stylesheet"/>
+
+    <!-- Own CSS -->
+    <link href="css/main.css" rel="stylesheet"/>
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Perfect Cycling Roads</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="index.html"><i class="fa fa-home"></i></span>&nbsp;&nbsp;Map</a></li>
+                    <li><a href="about.html"><i class="fa fa-question-circle"></i>&nbsp;&nbsp;About</a></li>
+                    <li><a href="license.html"><i class="fa fa-key"></i>&nbsp;&nbsp;License</a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right" id="sensebox">
+                    <li class="dropdown">
+                        <a href="" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <i class="fa fa-cogs"></i>&nbsp;&nbsp;<span id="boxName"></span>
+                        </a>
+                        <ul class="dropdown-menu col-xs-12" role="menu">
+                            <li>
+                                <a data-toggle="modal" data-target="#senseboxModal" id="editSensebox" href="#"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Your SenseBox</a>
+                                <a data-toggle="modal" data-target="#trackModal" id="editTracks" href="#"><i class="fa fa-road"></i>&nbsp;&nbsp;Your Tracks</a>
+                                <a data-toggle="modal" data-target="#newTrackModal" href="#"><i class="fa fa-upload"></i>&nbsp;&nbsp;Add a new track</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#" id="logoutButton"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="navbar-form navbar-right" id="login">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="SenseBox-ID" id="senseboxIdInput">
+                    </div>
+                    <button type="button" class="btn btn-primary" id="loginButton">Login</button>
+                </div>
+
+                <ul class="nav navbar-nav navbar-right" id="newSensebox">
+                    <li>
+                        <a data-toggle="modal" data-target="#newSenseboxModal" href="#"><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Create new Sensebox</a>
+                    </li>
+                </ul>
+
+            </div>
+
+        </div>
+    </nav>
+    <nav class='menu-ui'>
+        <b>Road Conditions</b>
+        <a href='#' class='active' data-filter='all'>All</a>
+        <a href='#' data-filter='perfect'>Perfect</a>
+        <a href='#' data-filter='poor'>Poor</a>
+    </nav>
+    <div class="content">
+        <div id="map"></div>
+    </div>
+
+    <!-- NEW-SENEBOX-MODAL -->
+    <div id="newSenseboxModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Create new SenseBox</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nameInput">SenseBox-Name</label>
+                        <input class="form-control" type="text" class="form-control" placeholder="Name" id="nameInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="boxTypeInput">SenseBox-Type</label>
+                        <select class="form-control" id="boxTypeInput">
+                            <option disabled="disabled">static</option>
+                            <option selected="selected">mobile</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times"></i>&nbsp;&nbsp;Close
+                    </button>
+                    <button type="submit" class="btn btn-success" id="submitSenseboxButton">
+                        <i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SENSEBOX-MODAL -->
+    <div id="senseboxModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><i class="fa fa-pencil-square-o"></i> Your SenseBox</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group boxId">
+                        <label for="boxId">SenseBox-ID</label><br>
+                        <span id="boxId" class="label label-warning" style="font-size: 13pt;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="nameInput_2">SenseBox-Name</label>
+                        <input class="form-control" type="text" class="form-control" placeholder="Name" id="nameInput_2">
+                    </div>
+                    <div class="form-group">
+                        <label for="boxTypeInput_2">SenseBox-Type</label>
+                        <select class="form-control" id="boxTypeInput_2">
+                            <option disabled="disabled">static</option>
+                            <option selected="selected">mobile</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-xs-4 left">
+                        <button type="button" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>&nbsp;&nbsp;Delete
+                        </button>
+                    </div>
+                    <div class="col-xs-8 navbar-right">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-times"></i>&nbsp;&nbsp;Close
+                        </button>
+                        <button type="submit" class="btn btn-success" id="saveSenseboxButton">
+                            <i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRACK-MODAL -->
+    <div id="trackModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Your Tracks</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel panel-default">
+                        <table id="tracks" class="table table-striped table-hover">
+                            <thead>
+                                <th>TrackId</th>
+                                <th>Uploaded</th>
+                                <th></th>
+                                <th></th>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times"></i>&nbsp;&nbsp;Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW TRACK-MODAL -->
+    <div id="newTrackModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Upload new Track</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="csvInput">Please choose a CSV-File:</label>
+                        <input type="file" id="csvInput" accept=".csv">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times"></i>&nbsp;&nbsp;Close
+                    </button>
+                    <button type="submit" class="btn btn-success" id="submitTrackButton">
+                        <i class="fa fa-floppy-o"></i>&nbsp;&nbsp;Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Own JavaScripts -->
+    <script src="js/config.js"></script>
+    <script src='lib/mapbox.js/mapbox.js'></script>
+    <script src="js/map.js"></script>
+    <script src="js/resize.js"></script>
+    <script src="js/manage.js"></script>
+
+</body>
+</html>
