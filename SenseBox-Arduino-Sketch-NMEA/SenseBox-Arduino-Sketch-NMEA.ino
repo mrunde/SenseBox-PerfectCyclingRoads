@@ -66,7 +66,7 @@ void setup() {
   myBarometer.init();
 
   //Init light sensor
-  tsl.begin()
+  tsl.begin();
   tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
   tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
 
