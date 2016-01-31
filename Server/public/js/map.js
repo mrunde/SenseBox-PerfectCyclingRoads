@@ -73,6 +73,9 @@ $( document ).ready(function() {
 
         boxes.forEach(function (box, key) {
             box.tracks.forEach(function (track, key) {
+                
+                // Interpolate the data before the visualization
+                track.measurements = interpolate(track.measurements);
 
                 track.measurements.forEach(function (measurement, key) {
 
@@ -137,6 +140,23 @@ $( document ).ready(function() {
             return false;
         });
     };
+
+    /*
+        Function to interpolate the speed and vibration values
+    */
+    function interpolate(measurements) {
+        for (var i = 2; i < measurements.length - 2; i++) {
+            var m_2 = measurements[i-2],
+                m_1 = measurements[i-1],
+                m = measurements[i],
+                m1 = measurements[i+1],
+                m2 = measurements[i+2];
+            measurements[i].speed = (m_2.speed + m_1.speed + m.speed + m1.speed + m2.speed) / 5;
+            measurements[i].vibration = (m_2.vibration + m_1.vibration + m.vibration + m1.vibration + m2.vibration) / 5;
+        }
+
+        return measurements;
+    }
 
     /*
         Function to calculate the condition of the road based on the measured parameters
