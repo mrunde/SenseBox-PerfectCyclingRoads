@@ -29,7 +29,8 @@ function resetTrackModal() {
     $('#closeTrackButton').prop('disabled', false);
     $('#submitTrackButton').prop('disabled', false);
     $('#newTrackModal').modal('hide');
-    $('#newTrackModalContent').html('<div class="form-group"><label for="csvInput">Please choose a CSV-File:</label><input type="file" id="csvInput" accept=".csv"></div>');
+    $('#selectFile').show();
+    $('#loading').hide();
 }
 
 // MANAGE
@@ -38,6 +39,7 @@ $( document ).ready(function() {
     // INIT
     var currentSensebox = undefined;
     checkBoxId();
+    $( "#loading" ).hide();
 
     // TOGGLE NAVBAR-ELEMENTS
     function checkBoxId() {
@@ -146,11 +148,11 @@ $( document ).ready(function() {
 
     // CREATE NEW TRACK
     $( "#submitTrackButton" ).click(function() {
+        $( "#selectFile" ).hide();
+        $( "#loading" ).show();
+        $( "#closeTrackButton" ).prop('disabled', true);
+        $( "#submitTrackButton" ).prop('disabled', true);
         handleFiles(document.getElementById("csvInput").files);
-        $('#closeTrackButton').prop('disabled', true);
-        $('#submitTrackButton').prop('disabled', true);
-        $('#loading').show();
-        $('#loading').hide();
     });
 
 
@@ -246,13 +248,13 @@ $( document ).ready(function() {
                         async: false,
                         success: function(data) {
                             length = length-1;
-                            if(length=0) {
+                            if(length==0) {
                                 resetTrackModal();
                             }
                         },
                         error: function(data){
                             length = length-1;
-                            if(length=0) {
+                            if(length==0) {
                                 resetTrackModal();
                             }
                         }

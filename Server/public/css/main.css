@@ -85,9 +85,6 @@ body {
 .blocktext {
     text-align: justify;
 }
-#loading {
-    display: none;
-}
 .menu-ui {
     background: #fff;
     position: absolute;
