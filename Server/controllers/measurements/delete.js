@@ -7,8 +7,6 @@ var Measurement = mongoose.model('Measurement');
 // DELETE
 exports.request = function(req, res){
 	Measurement.load(req.params.measurementId, function(err, measurement){
-		track.remove(function(err) {
-		    res.jsonp(measurement);
-    	});
+		res.jsonp(measurement);
 	});
 };

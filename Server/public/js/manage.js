@@ -1,8 +1,34 @@
 "use strict"
 
+var currentSensebox = undefined;
+
+
 function showTrack(senseboxId, trackId){
     console.log(trackId);
     // TO-DO
+};
+
+// TRACK-LIST
+function loadTrackList(senseboxId) {
+    $.get(getURL() + "/boxes/" + senseboxId + "/tracks", function(data) {
+        if(data.length > 0) {
+            for(var i=0; i<data.length; i++) {
+                var row = '<tr>' +
+                    '<td><span class="label label-success" style="font-size: 14px;">' + data[i]._id + '</span></td>' +
+                    '<td>' + data[i].created + '</td>' +
+                    '<td class="middle">' +
+                    '<button type="button" class="btn btn-xs btn-default" onclick="highlightTrack(\'' + data[i]._id + '\')"><i class="fa fa-map"></i></button>' +
+                    '</td>' +
+                    '<td class="right">' +
+                    '<button type="button" class="btn btn-xs btn-danger" onclick="deleteTrack(\'' + senseboxId + '\', \'' + data[i]._id + '\')"><i class="fa fa-trash"></i></button>' +
+                    '</td>' +
+                    '</tr>';
+                $( row ).appendTo( $( "#tracks" ) );
+            }
+        } else {
+            showNone();
+        }
+    });
 };
 
 // DELETE TRACK
@@ -13,13 +39,30 @@ function deleteTrack(senseboxId, trackId) {
         type: 'DELETE',
         async: false,
         success: function(data) {
-            $('#trackModal').modal('hide');
+            $('#tracks tbody').remove();
+            loadTrackList(senseboxId);
+        }
+    });
+};
+
+// DELETE ALL TRACKS
+function deleteAllTracks() {
+    $.ajax({
+        url: getURL() + "/boxes/" + currentSensebox._id + "/tracks",
+        global: false,
+        type: 'DELETE',
+        async: false,
+        success: function(data) {
+            $('#tracks tbody').remove();
+            var row = '<tr><td colspan="4" class="middle" id="noTracks">- none -</td></tr>'
+            $( row ).appendTo( $( "#tracks" ) );
         }
     });
 };
 
 // SHOW NONE TRACKS AVAILABLE
 function showNone() {
+    $('#tracks tbody').remove();
     var row = '<tr><td colspan="4" class="middle" id="noTracks">- none -</td></tr>'
     $( row ).appendTo( $( "#tracks" ) );
 }
@@ -37,7 +80,7 @@ function resetTrackModal() {
 $( document ).ready(function() {
 
     // INIT
-    var currentSensebox = undefined;
+    currentSensebox = undefined;
     checkBoxId();
     $( "#loading" ).hide();
 
@@ -130,19 +173,7 @@ $( document ).ready(function() {
     // SHOW/EDIT TRACKS
     $( "#editTracks" ).click(function() {
         $('#tracks tbody').remove();
-        $.get(getURL() + "/boxes/" + currentSensebox._id + "/tracks", function(data) {
-            if(data.length > 0) {
-                for(var i=0; i<data.length; i++) {
-                    var row = '<tr><td><span class="label label-success" style="font-size: 14px;">' + data[i]._id + '</span></td>' +
-                        '<td>' + data[i].created + '</td>' +
-                        '<td><button type="button" class="btn btn-default" onclick="highlightTrack(\'' + data[i]._id + '\')"><i class="fa fa-map"></i></button></td>' +
-                        '<td><button type="button" class="btn btn-danger" onclick="deleteTrack(\'' + currentSensebox._id + '\', \'' + data[i]._id + '\')"><i class="fa fa-trash"></i></button></td></tr>';
-                    $( row ).appendTo( $( "#tracks" ) );
-                }
-            } else {
-                showNone();
-            }
-        });
+        loadTrackList(currentSensebox._id);
     });
 
 
