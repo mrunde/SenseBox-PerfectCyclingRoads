@@ -65,7 +65,7 @@ void setup() {
 
   // Initialize Light Sensor
   //Init light sensor
-  tsl.begin()
+  tsl.begin();
   tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
   tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
 
@@ -130,29 +130,24 @@ void loop() {
 
     // Parse GPS data for one second and report some key values
     //Serial.println("Searching GPS...");
-    for (unsigned long start = millis(); millis() - start < 1000;)
+    for (unsigned long start = millis(); millis() - start < 500;)
     {
       while (ss.available())
       {
-        char c = ss.read();
-        //Serial.print(c); // uncomment to see the full NMEA datasets
-        if (gps.encode(c)) { // Did a new valid sentence come in?
+        if (gps.encode(ss.read())) {
           newData = true;
           Serial.println(F("Data found! Proceeding..."));
+
         }
       }
     }
 
     ss.end();
 
-
     if (newData)
-
     {
       // IF NEW GPS-DATA
       Serial.println(F("GPS data found!"));
-
-
 
       float flat, flon;
       unsigned long age, date, time;
@@ -188,7 +183,6 @@ void loop() {
 
       //Accel/Gyro
       getAccel_Data();
-      getGyro_Data();
 
       //Save collected data to sd card
       dataFile = SD.open("test.csv", FILE_WRITE);
@@ -209,7 +203,7 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(tsl.getLuminosity(TSL2591_VISIBLE));
         dataFile.print(seperator);
-        dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */abs(Axyz[1])), 2);
+        dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */Axyz[2]), 2);
         dataFile.print(seperator);
         dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
 
@@ -238,13 +232,3 @@ void getAccel_Data(void)
   Axyz[1] = (double) ay / 16384;
   Axyz[2] = (double) az / 16384;
 }
-
-void getGyro_Data(void)
-{
-  accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
-  Gxyz[0] = (double) gx * 250 / 32768;
-  Gxyz[1] = (double) gy * 250 / 32768;
-  Gxyz[2] = (double) gz * 250 / 32768;
-}
-
-
