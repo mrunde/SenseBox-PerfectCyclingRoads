@@ -22,7 +22,7 @@ $( document ).ready(function() {
 
     // MAP-FUNCTION
     map.on('zoomend', function() {
-        console.log(map.getZoom());
+        //console.log(map.getZoom());
         if (map.getZoom() >= 14) {
             map.featureLayer.setFilter(function() { return true; });
         } else {
@@ -145,14 +145,26 @@ $( document ).ready(function() {
         Function to interpolate the speed and vibration values
     */
     function interpolate(measurements) {
-        for (var i = 2; i < measurements.length - 2; i++) {
-            var m_2 = measurements[i-2],
-                m_1 = measurements[i-1],
-                m = measurements[i],
-                m1 = measurements[i+1],
-                m2 = measurements[i+2];
-            measurements[i].speed = (m_2.speed + m_1.speed + m.speed + m1.speed + m2.speed) / 5;
-            measurements[i].vibration = (m_2.vibration + m_1.vibration + m.vibration + m1.vibration + m2.vibration) / 5;
+        // Range of the interpolation
+        var range = 3;
+
+        // Factors for the interpolation
+        // The array must be of the size: (range*2)+1
+        var factors = [1, 2, 3, 4, 3, 2, 1];
+
+        for (var i = range; i < measurements.length - range; i++) {
+            var interpolSpeed     = 0,
+                interpolVibration = 0,
+                divider           = 0;
+
+            for (var j = 0; j < range; j++) {
+                interpolSpeed     = interpolSpeed + factors[j] * measurements[i-j].speed;
+                interpolVibration = interpolVibration + factors[j] * measurements[i-j].vibration;
+                divider           = divider + factors[j];
+            }
+
+            measurements[i].speed     = interpolSpeed / divider;
+            measurements[i].vibration = interpolVibration / divider;
         }
 
         return measurements;
