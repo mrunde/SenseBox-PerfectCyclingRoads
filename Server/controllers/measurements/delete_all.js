@@ -5,18 +5,9 @@ var async = require('async');
 var Measurement = mongoose.model('Measurement');
 
 
-// DELETE
+// DELETE ALL
 exports.request = function(req, res){
-	Measurement.find({track_id: req.params.trackId}).exec(function(err, measurements) {
-		async.forEachOf(measurements, function (measurement, key, callback) {
-			Measurement.load(measurement.measurementId, function(err, _measurement){
-				_measurement.remove(function(err) {
-				    callback();
-		    	});
-			});
-		}, function (err) {
-		    if (err) console.error(err.message);
-		    res.jsonp(null);
-		});
+	Measurement.remove({ track_id: track._id }, function(err) {
+		res.jsonp(null);
 	});
 };

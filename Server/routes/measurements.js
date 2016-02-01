@@ -21,7 +21,7 @@ router.get('/boxes/:boxId/tracks/:trackId/measurements/:measurementId', get.requ
 
 
 // DELETE ALL
-router.put('/boxes/:boxId/tracks/:trackId/measurements', delAll.request);
+router.delete('/boxes/:boxId/tracks/:trackId/measurements', delAll.request);
 
 
 // DELETE

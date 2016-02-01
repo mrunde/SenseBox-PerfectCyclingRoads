@@ -8,9 +8,9 @@ var async = require('async');
 var debug = require('debug');
 
 // ROUTES
-var boxes = require('./routes/boxes');
-var tracks = require('./routes/tracks');
 var measurements = require('./routes/measurements');
+var tracks = require('./routes/tracks');
+var boxes = require('./routes/boxes');
 
 
 // WEBSERVER

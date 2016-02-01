@@ -2,21 +2,36 @@ require('../../models/track');
 
 var mongoose = require('mongoose');
 var async = require('async');
+var Measurement = mongoose.model('Measurement');
 var Track = mongoose.model('Track');
 
 
-// DELETE
+// DELETE ALL
 exports.request = function(req, res){
-	Track.find({box_id: req.params.boxId}).exec(function(err, tracks) {
-		async.forEachOf(tracks, function (track, key, callback) {
-			Track.load(track.trackId, function(err, _track){
-				_track.remove(function(err) {
-				    callback();
-		    	});
+	async.waterfall([
+		function(callback) {
+			// GET ALL RELATED TRACKS
+			Track.find({box_id: req.params.boxId}).exec(function(err, tracks) {
+				callback(null, tracks);
 			});
-		}, function (err) {
-		    if (err) console.error(err.message);
-		    res.jsonp(null);
-		});
+		},
+		function(tracks, callback) {
+			// DELETE ALL RELATED MEASUREMENTS
+			async.forEachOf(tracks, function (track, key, callback) {
+				Measurement.remove({ track_id: track._id }, function(err) {
+					callback(null);
+				});
+			}, function (err) {
+			    callback(null);
+			});
+		},
+		function(callback) {
+			// DELETE ALL TRACKS
+			Track.remove({ box_id: req.params.boxId }, function(err) {
+				callback(null);
+			});
+		}
+	], function (err, result) {
+		res.jsonp(null);
 	});
 };
