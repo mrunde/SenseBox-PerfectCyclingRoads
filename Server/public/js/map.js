@@ -22,7 +22,7 @@ $( document ).ready(function() {
 
     // MAP-FUNCTION
     map.on('zoomend', function() {
-        //console.log(map.getZoom());
+        // TO-DO - not working
         if (map.getZoom() >= 14) {
             map.featureLayer.setFilter(function() { return true; });
         } else {
@@ -73,7 +73,7 @@ $( document ).ready(function() {
 
         boxes.forEach(function (box, key) {
             box.tracks.forEach(function (track, key) {
-                
+
                 // Interpolate the data before the visualization
                 track.measurements = interpolate(track.measurements);
 
@@ -107,13 +107,15 @@ $( document ).ready(function() {
                                     '</table></div>',
                                 'perfect': isPerfectCondition(measurement.speed, measurement.vibration),
                                 'poor': isPoorCondition(measurement.speed, measurement.vibration),
-                                'icon': {
+                                'fillColor': calcRoadConditionIcon(measurement.speed, measurement.vibration),
+                                'color': calcRoadConditionIcon(measurement.speed, measurement.vibration)
+                                /*'icon': {
                                     'iconUrl': calcRoadConditionIcon(measurement.speed, measurement.vibration),
                                     'iconSize': [12, 12], // size of the icon
                                     'iconAnchor': [6, 6], // point of the icon which will correspond to marker's location
                                     'popupAnchor': [0, -6], // point from which the popup should open relative to the iconAnchor
                                     'className': 'dot'
-                                }
+                                }*/
                             }
                         }
                     );
@@ -122,18 +124,51 @@ $( document ).ready(function() {
         });
 
         // Add markers to the map
-        var markers = L.mapbox.featureLayer().addTo(map);
-        markers.on('layeradd', function(e) {
+        var markers = L.mapbox.featureLayer(geoJsonFeatures, {
+            pointToLayer: function(feature, latlon) {
+                return L.circleMarker(latlon, {
+                    radius: 3,
+                    fillColor: feature.properties.fillColor,
+                    weight: 1,
+                    color: feature.properties.color,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                });
+            }
+        }).addTo(map);
+        /*markers.on('layeradd', function(e) {
             var marker = e.layer;
             var feature = marker.feature;
-            marker.setIcon(L.icon(feature.properties.icon));
+            //marker.setIcon(L.icon(feature.properties.icon));
         });
-        markers.setGeoJSON(geoJsonFeatures);
+        markers.setGeoJSON(geoJsonFeatures);*/
 
-        $('.menu-ui a').on('click', function() {
-            // For each filter link, get the 'data-filter' attribute value.
-            var filter = $(this).data('filter');
-            $(this).addClass('active').siblings().removeClass('active');
+        var filter = 'all';
+        updateMarkers(filter);
+
+        $( '#filter_all' ).on('click', function() {
+            $( '#filter_all' ).removeClass('btn-default').addClass('btn-primary');
+            $( '#filter_perfect' ).removeClass('btn-primary').addClass('btn-default');
+            $( '#filter_poor' ).removeClass('btn-primary').addClass('btn-default');
+            updateMarkers('all');
+        });
+
+        $( '#filter_perfect' ).on('click', function() {
+            $( '#filter_all' ).removeClass('btn-primary').addClass('btn-default');
+            $( '#filter_perfect' ).removeClass('btn-default').addClass('btn-primary');
+            $( '#filter_poor' ).removeClass('btn-primary').addClass('btn-default');
+            updateMarkers('perfect');
+        });
+
+        $( '#filter_poor' ).on('click', function() {
+            $( '#filter_all' ).removeClass('btn-primary').addClass('btn-default');
+            $( '#filter_perfect' ).removeClass('btn-primary').addClass('btn-default');
+            $( '#filter_poor' ).removeClass('btn-default').addClass('btn-primary');
+            updateMarkers('poor');
+        });
+
+        // FILTER-FUNCTION
+        function updateMarkers(filter) {
             markers.setFilter(function(f) {
                 // If the data-filter attribute is set to "all", return
                 // all (true). Otherwise, filter on markers that have
@@ -141,8 +176,10 @@ $( document ).ready(function() {
                 return (filter === 'all') ? true : f.properties[filter] === true;
             });
             return false;
-        });
+        };
     };
+
+
 
     /*
         Function to interpolate the speed and vibration values
@@ -190,7 +227,7 @@ $( document ).ready(function() {
                 next              = isPerfectCondition(measurements[i+1].speed, measurements[i+1].vibration),
                 interpolSpeed     = 0,
                 interpolVibration = 0;
-            
+
             // Check whether a gap might exist before running the code
             if (current != previous && current != next) {
                 for (var j = -range; j < range && gap; j++) {
@@ -221,17 +258,18 @@ $( document ).ready(function() {
         Returns the icon file path
     */
     function calcRoadConditionIcon(speed, vibration) {
-        var icon;
+        //var icon;
 
         if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
             // Perfect Cycling Road
-            icon = '/img/circle_green.png';
+            //icon = '/img/circle_green.png';
+            return "#00FF00";
         } else {
             // Poor Cycling Road
-            icon = '/img/circle_red.png';
+            //icon = '/img/circle_red.png';
+            return "#FF0000";
         }
-
-        return icon;
+        //return icon;
     }
 
     /*
