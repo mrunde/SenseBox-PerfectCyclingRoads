@@ -11,7 +11,8 @@ $( document ).ready(function() {
     L.control.layers({
         'Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map),
         'Satellite': L.mapbox.tileLayer('mapbox.satellite'),
-        'Light': L.mapbox.tileLayer('mapbox.light')
+        'Light': L.mapbox.tileLayer('mapbox.light'),
+        'Dark': L.mapbox.tileLayer('mapbox.dark')
     }).addTo(map);
 
     var boxes = [];
@@ -32,7 +33,6 @@ $( document ).ready(function() {
 
     // REQUEST DATA FROM API
     function requestData(){
-
         $.ajax({
             url: getURL() + "/boxes",
             global: false,
