@@ -77,6 +77,9 @@ $( document ).ready(function() {
                 // Interpolate the data before the visualization
                 track.measurements = interpolate(track.measurements);
 
+                // Close gaps in series of "perfect" or "poor" road conditions
+                track.measurements = closeGaps(track.measurements);
+
                 track.measurements.forEach(function (measurement, key) {
 
                     geoJsonFeatures.push(
@@ -152,6 +155,7 @@ $( document ).ready(function() {
         // The array must be of the size: (range*2)+1
         var factors = [1, 2, 3, 4, 3, 2, 1];
 
+        // Interpolate the measurements
         for (var i = range; i < measurements.length - range; i++) {
             var interpolSpeed     = 0,
                 interpolVibration = 0,
@@ -167,6 +171,48 @@ $( document ).ready(function() {
             measurements[i].vibration = interpolVibration / divider;
         }
 
+        // Return the interpolated measurements
+        return measurements;
+    }
+
+    /*
+        Function to close gaps in series of "perfect" or "poor" road conditions
+    */
+    function closeGaps(measurements) {
+        // Range of neighbours to observe to close gaps between
+        // Range must be greater 0
+        var range = 2;
+
+        for (var i = range; i < measurements.length - range; i++) {
+            var gap               = true,
+                current           = isPerfectCondition(measurements[i].speed, measurements[i].vibration),
+                previous          = isPerfectCondition(measurements[i-1].speed, measurements[i-1].vibration),
+                next              = isPerfectCondition(measurements[i+1].speed, measurements[i+1].vibration),
+                interpolSpeed     = 0,
+                interpolVibration = 0;
+            
+            // Check whether a gap might exist before running the code
+            if (current != previous && current != next) {
+                for (var j = -range; j < range && gap; j++) {
+                    if (j != 0) {
+                        if (current != isPerfectCondition(measurements[i-range].speed, measurements[i-range].vibration)) {
+                            gap = false;
+                            break;
+                        } else {
+                            interpolSpeed     = interpolSpeed + measurements[i-range].speed;
+                            interpolVibration = interpolVibration + measurements[i-range].vibration;
+                        }
+                    }
+                }
+
+                if (gap) {
+                    measurements[i].speed     = interpolSpeed / (range * 2);
+                    measurements[i].vibration = interpolVibration / (range * 2);
+                }
+            }
+        }
+
+        // Return the adjusted measurements
         return measurements;
     }
 
