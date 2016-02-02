@@ -34,7 +34,7 @@ TinyGPS gps;
 
 File dataFile;
 String dataRow;
-String seperator = ";";
+String seperator = ",";
 String dattim = "noval";
 int rowCounter = 1;
 
@@ -93,7 +93,7 @@ void setup() {
   // If the file opened okay, write to it:
   if (dataFile) {
     //Serial.print("Writing to test.txt...");
-    dataFile.println("row;lat;lon;speed;timestamp;sound;brightness;vibration;altitude");
+    dataFile.println("row,lat,lon,speed,timestamp,sound,brightness,vibration,altitude");
     // close the file:
     dataFile.close();
     //Serial.println("done.");
@@ -137,7 +137,6 @@ void loop() {
         if (gps.encode(ss.read())) {
           newData = true;
           Serial.println(F("Data found! Proceeding..."));
-
         }
       }
     }
@@ -203,7 +202,7 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(tsl.getLuminosity(TSL2591_VISIBLE));
         dataFile.print(seperator);
-        dataFile.print((/*abs(Axyz[0]) + abs(Axyz[1]) + */Axyz[2]), 2);
+        dataFile.print((Axyz[2]), 2);
         dataFile.print(seperator);
         dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
 
