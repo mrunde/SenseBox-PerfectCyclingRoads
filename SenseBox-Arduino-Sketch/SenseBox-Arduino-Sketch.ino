@@ -13,7 +13,10 @@ const int LED = 7;
 const int chipSelect = 4;
 const int soundSensor = A0;
 
+//Light sensor variables
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier (for your use later)
+uint16_t ir, full;
+
 
 //Barometer variables
 float pressure;
@@ -93,7 +96,7 @@ void setup() {
   // If the file opened okay, write to it:
   if (dataFile) {
     //Serial.print("Writing to test.txt...");
-    dataFile.println("row,lat,lon,speed,timestamp,sound,brightness,vibration,altitude");
+    dataFile.println("row,lat,lon,speed,timestamp,sound,luminosity,lux,ir,vibration,altitude");
     // close the file:
     dataFile.close();
     //Serial.println("done.");
@@ -182,6 +185,11 @@ void loop() {
 
       //Accel/Gyro
       getAccel_Data();
+      
+      //Light sensor
+      uint32_t lum = tsl.getFullLuminosity();
+      ir = lum >> 16;
+      full = lum & 0xFFFF;
 
       //Save collected data to sd card
       dataFile = SD.open("test.csv", FILE_WRITE);
@@ -201,6 +209,10 @@ void loop() {
         dataFile.print(analogRead(soundSensor));
         dataFile.print(seperator);
         dataFile.print(tsl.getLuminosity(TSL2591_VISIBLE));
+        dataFile.print(seperator);
+        dataFile.print(tsl.calculateLux(full,ir));
+        dataFile.print(seperator);
+        dataFile.print(ir);
         dataFile.print(seperator);
         dataFile.print((Axyz[2]), 2);
         dataFile.print(seperator);
