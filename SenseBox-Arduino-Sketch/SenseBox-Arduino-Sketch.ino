@@ -3,9 +3,8 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
-#include "Barometer.h"
 #include "I2Cdev.h"
-#include "MPU6050.h"
+#include "MPU9150.h"
 #include <Adafruit_Sensor.h>
 #include "Adafruit_TSL2591.h"
 
@@ -17,21 +16,9 @@ const int soundSensor = A0;
 Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier (for your use later)
 uint16_t ir, full;
 
-
-//Barometer variables
-float pressure;
-float atm;
-Barometer myBarometer;
-
 //Accelerometer variables
-MPU6050 accelgyro;
+MPU9150 accelgyro;
 I2Cdev   I2C_M;
-int16_t ax, ay, az;
-int16_t gx, gy, gz;
-int16_t   mx, my, mz;
-float Axyz[3];
-float Gxyz[3];
-float Mxyz[3];
 
 TinyGPS gps;
 
@@ -58,11 +45,13 @@ int isOn;
 */
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Wire.begin();
   //Initialize Accelerometer
   accelgyro.initialize();
-  //Serial.println(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+  TWBR = 12; // set 400kHz mode @ 16MHz CPU or 200kHz mode @ 8MHz CPU
+  //accelgyro.setFullScaleAccelRange(MPU9150_ACCEL_FS_16);
+  //ln(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
   delay(1000);
 
@@ -71,9 +60,6 @@ void setup() {
   tsl.begin();
   tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
   tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
-
-  //Init barometer
-  myBarometer.init();
 
   // Initalize SD card:
   //Serial.print("init sd card...");
@@ -96,7 +82,7 @@ void setup() {
   // If the file opened okay, write to it:
   if (dataFile) {
     //Serial.print("Writing to test.txt...");
-    dataFile.println("row,lat,lon,speed,timestamp,sound,luminosity,lux,ir,vibration,altitude");
+    dataFile.println("row,lat,lon,speed,timestamp,sound,luminosity,lux,ir,vibration");
     // close the file:
     dataFile.close();
     //Serial.println("done.");
@@ -113,7 +99,7 @@ void loop() {
   if (buttonState != lastButtonState) {
     if (buttonState == HIGH) {
       //buttonPushCounter++;
-      Serial.println(F("ON"));
+      //Serial.println(F("ON"));
       isOn = 1 - isOn;
       //Serial.print(buttonPushCounter);
 
@@ -124,7 +110,7 @@ void loop() {
   lastButtonState = buttonState;
 
   if (isOn == 1) {
-    digitalWrite(LED, HIGH);
+    digitalWrite(LED, LOW);
     bool newData = false;
 
     ss.begin(9600);
@@ -139,7 +125,7 @@ void loop() {
       {
         if (gps.encode(ss.read())) {
           newData = true;
-          Serial.println(F("Data found! Proceeding..."));
+          //Serial.println(F("Data found! Proceeding..."));
         }
       }
     }
@@ -149,7 +135,7 @@ void loop() {
     if (newData)
     {
       // IF NEW GPS-DATA
-      Serial.println(F("GPS data found!"));
+      //Serial.println(F("GPS data found!"));
 
       float flat, flon;
       unsigned long age, date, time;
@@ -172,7 +158,7 @@ void loop() {
         Serial.print(F("********** ******** "));
       else
       {
-        char sz[32];
+        char sz[24];
         sprintf(sz, "%02d/%02d/%02d %02d:%02d:%02d ",
                 month, day, year, hour, minute, second);
         //Serial.print(sz);
@@ -184,7 +170,6 @@ void loop() {
       newData = false;
 
       //Accel/Gyro
-      getAccel_Data();
       
       //Light sensor
       uint32_t lum = tsl.getFullLuminosity();
@@ -214,9 +199,7 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(ir);
         dataFile.print(seperator);
-        dataFile.print((Axyz[2]), 2);
-        dataFile.print(seperator);
-        dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
+        dataFile.println(((double) accelgyro.getAccelerationZ()/16384), 4);
 
         // close the file:
         dataFile.close();
@@ -225,21 +208,14 @@ void loop() {
         Serial.println(F("done writing."));
       } else {
         // if the file didn't open, print an error:
-        Serial.println(F("error opening file"));
+        //Serial.println(F("error opening file"));
       }
 
     }
   } else {
-    digitalWrite(LED, LOW);   // turn the LED on (HIGH is the voltage level)
-    Serial.println(F("OFF"));
+    digitalWrite(LED, HIGH);   // turn the LED on (HIGH is the voltage level)
+    //Serial.println(F("OFF"));
   }
 
 }
 
-void getAccel_Data(void)
-{
-  accelgyro.getMotion9(&ax, &ay, &az, &gx, &gy, &gz, &mx, &my, &mz);
-  Axyz[0] = (double) ax / 16384;
-  Axyz[1] = (double) ay / 16384;
-  Axyz[2] = (double) az / 16384;
-}
