@@ -133,6 +133,7 @@ $( document ).ready(function() {
             }
         }).addTo(map);
 
+        // FILTERS
         var filter = 'all';
         updateMarkers(filter);
 
@@ -167,6 +168,31 @@ $( document ).ready(function() {
             });
             return false;
         };
+
+        // MAP REFRESHING
+        // ...for new tracks
+        $( '#submitTrackButton' ).on('click', function() {
+            refreshMap();
+        });
+        // ...for deleted boxes
+        $( '#deleteSensebox' ).on('click', function() {
+            refreshMap();
+        });
+        // ...for deleted tracks (single and all)
+        // TODO works only for deleting all tracks so far
+        $( '[id^="delete"]' ).each(function() {
+            $(this).on('click', function() {
+                refreshMap();
+            });
+        });
+
+        // REFRESH FUNCTION
+        function refreshMap() {
+            setTimeout(function() {
+                map.removeLayer(markers);
+                requestData();
+            }, 10);
+        }
     };
 
     // INTERPOLATE SPEED AND VIBRATION

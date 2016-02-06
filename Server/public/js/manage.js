@@ -20,7 +20,7 @@ function loadTrackList(senseboxId) {
                     '<button type="button" class="btn btn-xs btn-default" onclick="highlightTrack(\'' + data[i]._id + '\')"><i class="fa fa-map"></i></button>' +
                     '</td>' +
                     '<td class="right">' +
-                    '<button type="button" class="btn btn-xs btn-danger" onclick="deleteTrack(\'' + senseboxId + '\', \'' + data[i]._id + '\')"><i class="fa fa-trash"></i></button>' +
+                    '<button type="button" class="btn btn-xs btn-danger" id="deleteTrack_' + senseboxId + '" onclick="deleteTrack(\'' + senseboxId + '\', \'' + data[i]._id + '\')"><i class="fa fa-trash"></i></button>' +
                     '</td>' +
                     '</tr>';
                 $( row ).appendTo( $( "#tracks" ) );
@@ -130,7 +130,6 @@ $( document ).ready(function() {
         $( "#boxTypeInput_2" ).val(currentSensebox.boxType);
     });
 
-
     // DELETE SENSEBOX
     $( "#deleteSensebox" ).click(function() {
         $.ajax({
@@ -145,7 +144,6 @@ $( document ).ready(function() {
             }
         });
     });
-
 
     // SAVE SENSEBOX
     $( "#saveSenseboxButton" ).click(function() {
@@ -169,13 +167,11 @@ $( document ).ready(function() {
         $('#senseboxModal').modal('hide');
     });
 
-
     // SHOW/EDIT TRACKS
     $( "#editTracks" ).click(function() {
         $('#tracks tbody').remove();
         loadTrackList(currentSensebox._id);
     });
-
 
     // CREATE NEW TRACK
     $( "#submitTrackButton" ).click(function() {
@@ -186,13 +182,11 @@ $( document ).ready(function() {
         handleFiles(document.getElementById("csvInput").files);
     });
 
-
     // LOGOUT
     $( "#logoutButton" ).click(function() {
         currentSensebox = undefined;
         checkBoxId();
     });
-
 
     // CHECK FILE-READER-SUPPORT IN BROWSER
     function handleFiles(files) {
@@ -244,7 +238,6 @@ $( document ).ready(function() {
       }
     }
 
-
     // UPLOAD NEW TRACK
     function uploadTrack(measurements){
 
@@ -291,11 +284,7 @@ $( document ).ready(function() {
                         }
                     });
                 });
-
             }
         });
-        //TO-DO
-        //drawMarkers();
-        location.reload(); // Hack around to reload the whole page. Takes a lot of time and should be replaced by a better solution
     };
 });
