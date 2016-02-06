@@ -296,5 +296,6 @@ $( document ).ready(function() {
         });
         //TO-DO
         //drawMarkers();
+        location.reload(); // Hack around to reload the whole page. Takes a lot of time and should be replaced by a better solution
     };
 });
