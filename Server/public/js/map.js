@@ -6,7 +6,7 @@ $( document ).ready(function() {
 
     // INIT
     L.mapbox.accessToken = getMapboxAccessToken();
-    var map = L.mapbox.map('map').setView([51.961298, 7.625849], 14);
+    var map = L.mapbox.map('map').setView([51.961298, 7.625849], 14).addControl(L.mapbox.geocoderControl('mapbox.places'));
 
     L.control.layers({
         'Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map),
