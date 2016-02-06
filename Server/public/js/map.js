@@ -1,5 +1,10 @@
 "use strict"
 
+// CONSTANT VARIABLES FOR THE ROAD CONDITIONS
+var minSpeed     = 10,
+    minVibration =  0.8,
+    maxVibration =  1.2;
+
 // MAP
 $( document ).ready(function() {
 
@@ -9,10 +14,10 @@ $( document ).ready(function() {
     var map = L.mapbox.map('map').setView([51.961298, 7.625849], 14).addControl(L.mapbox.geocoderControl('mapbox.places'));
 
     L.control.layers({
-        'Streets': L.mapbox.tileLayer('mapbox.streets').addTo(map),
-        'Satellite': L.mapbox.tileLayer('mapbox.satellite'),
+        'Dark': L.mapbox.tileLayer('mapbox.dark').addTo(map),
         'Light': L.mapbox.tileLayer('mapbox.light'),
-        'Dark': L.mapbox.tileLayer('mapbox.dark')
+        'Streets': L.mapbox.tileLayer('mapbox.streets'),
+        'Satellite': L.mapbox.tileLayer('mapbox.satellite')
     }).addTo(map);
 
     var boxes = [];
@@ -260,7 +265,7 @@ $( document ).ready(function() {
     function calcRoadConditionIcon(speed, vibration) {
         //var icon;
 
-        if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
+        if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
             // Perfect Cycling Road
             //icon = '/img/circle_green.png';
             return "#00FF00";
@@ -277,7 +282,7 @@ $( document ).ready(function() {
         Returns true or false
     */
     function isPerfectCondition(speed, vibration) {
-        if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
+        if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
             // Perfect Cycling Road
             return true;
         } else {
@@ -291,7 +296,7 @@ $( document ).ready(function() {
         Returns true or false
     */
     function isPoorCondition(speed, vibration) {
-        if (speed > 15 && vibration < 1.2 && vibration > 0.8) {
+        if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
             // Perfect Cycling Road
             return false;
         } else {
