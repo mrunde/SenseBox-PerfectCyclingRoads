@@ -8,7 +8,6 @@ var minSpeed     = 10,
 // MAP
 $( document ).ready(function() {
 
-
     // INIT
     L.mapbox.accessToken = getMapboxAccessToken();
     var map = L.mapbox.map('map').setView([51.961298, 7.625849], 14).addControl(L.mapbox.geocoderControl('mapbox.places'));
@@ -26,15 +25,14 @@ $( document ).ready(function() {
 
 
     // MAP-FUNCTION
-    map.on('zoomend', function() {
+    /*map.on('zoomend', function() {
         // TO-DO - not working
         if (map.getZoom() >= 14) {
             map.featureLayer.setFilter(function() { return true; });
         } else {
             map.featureLayer.setFilter(function() { return false; });
         }
-    });
-
+    });*/
 
     // REQUEST DATA FROM API
     function requestData(){
@@ -114,13 +112,6 @@ $( document ).ready(function() {
                                 'poor': isPoorCondition(measurement.speed, measurement.vibration),
                                 'fillColor': calcRoadConditionIcon(measurement.speed, measurement.vibration),
                                 'color': calcRoadConditionIcon(measurement.speed, measurement.vibration)
-                                /*'icon': {
-                                    'iconUrl': calcRoadConditionIcon(measurement.speed, measurement.vibration),
-                                    'iconSize': [12, 12], // size of the icon
-                                    'iconAnchor': [6, 6], // point of the icon which will correspond to marker's location
-                                    'popupAnchor': [0, -6], // point from which the popup should open relative to the iconAnchor
-                                    'className': 'dot'
-                                }*/
                             }
                         }
                     );
@@ -141,12 +132,6 @@ $( document ).ready(function() {
                 });
             }
         }).addTo(map);
-        /*markers.on('layeradd', function(e) {
-            var marker = e.layer;
-            var feature = marker.feature;
-            //marker.setIcon(L.icon(feature.properties.icon));
-        });
-        markers.setGeoJSON(geoJsonFeatures);*/
 
         var filter = 'all';
         updateMarkers(filter);
@@ -184,11 +169,7 @@ $( document ).ready(function() {
         };
     };
 
-
-
-    /*
-        Function to interpolate the speed and vibration values
-    */
+    // INTERPOLATE SPEED AND VIBRATION
     function interpolate(measurements) {
         // Range of the interpolation
         var range = 3;
@@ -217,9 +198,7 @@ $( document ).ready(function() {
         return measurements;
     }
 
-    /*
-        Function to close gaps in series of "perfect" or "poor" road conditions
-    */
+    // CLOSE GAPS
     function closeGaps(measurements) {
         // Range of neighbours to observe to close gaps between
         // Range must be greater 0
@@ -253,34 +232,22 @@ $( document ).ready(function() {
                 }
             }
         }
-
         // Return the adjusted measurements
         return measurements;
     }
 
-    /*
-        Function to calculate the condition of the road based on the measured parameters
-        Returns the icon file path
-    */
+    // CALCULATE ROAD CONDITION ICON
     function calcRoadConditionIcon(speed, vibration) {
-        //var icon;
-
         if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
             // Perfect Cycling Road
-            //icon = '/img/circle_green.png';
             return "#00FF00";
         } else {
             // Poor Cycling Road
-            //icon = '/img/circle_red.png';
             return "#FF0000";
         }
-        //return icon;
     }
 
-    /*
-        Function to calculate whether the condition of the road is perfect
-        Returns true or false
-    */
+    // IS ROAD IN PERFECT CONDITION
     function isPerfectCondition(speed, vibration) {
         if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
             // Perfect Cycling Road
@@ -291,10 +258,7 @@ $( document ).ready(function() {
         }
     }
 
-    /*
-        Function to calculate whether the condition of the road is poor
-        Returns true or false
-    */
+    // IS ROAD IN POOR CONDITION
     function isPoorCondition(speed, vibration) {
         if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
             // Perfect Cycling Road
@@ -304,5 +268,4 @@ $( document ).ready(function() {
             return true;
         }
     }
-
 });
