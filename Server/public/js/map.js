@@ -98,15 +98,16 @@ $( document ).ready(function() {
                                 'title': '<h5><span class="label label-warning">' + box._id + '</span> <small>BoxId</small></h5>' +
                                     '<h5><span class="label label-success">' + track._id + '</span> <small>TrackId</small></h5>',
                                 'description': '<div class="panel panel-default"><table class="table table-striped">' +
+                                    '<tr><th>Timestamp</th><td>' + measurement.timestamp + '</td></tr>' +
                                     '<tr><th>Longitude</th><td>' + measurement.lng + '</td></tr>' +
                                     '<tr><th>Latitude</th><td>' + measurement.lat + '</td></tr>' +
                                     '<tr><th>Altitude</th><td>' + measurement.altitude + '</td></tr>' +
                                     '<tr><th>Speed</th><td>' + measurement.speed + '</td></tr>' +
                                     '<tr><th>Vibration</th><td>' + measurement.vibration + '</td></tr>' +
                                     '<tr><th>Sound</th><td>' + measurement.sound + '</td></tr>' +
+                                    '<tr><th>Luminosity</th><td>' + measurement.luminosity + '</td></tr>' +
                                     '<tr><th>Brightness</th><td>' + measurement.brightness + '</td></tr>' +
                                     '<tr><th>IR</th><td>' + measurement.ir + '</td></tr>' +
-                                    '<tr><th>UV</th><td>' + measurement.uv + '</td></tr>' +
                                     '</table></div>',
                                 'perfect': isPerfectCondition(measurement.speed, measurement.vibration),
                                 'poor': isPoorCondition(measurement.speed, measurement.vibration),
