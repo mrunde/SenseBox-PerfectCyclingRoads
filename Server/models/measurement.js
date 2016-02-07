@@ -48,7 +48,7 @@ var MeasurementSchema = new Schema({
 		type: Number,
 		required: true
 	},
-	uv: {
+	luminosity: {
 		type: Number,
 		required: true
 	},

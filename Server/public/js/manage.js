@@ -258,16 +258,16 @@ $( document ).ready(function() {
                         type: 'POST',
                         data: {
                             "track_id": track._id,
-                            "timestamp": measurement[4],
-                            "lng": parseFloat(measurement[2]),
                             "lat": parseFloat(measurement[1]),
-                        	"altitude": parseFloat(measurement[8]),
-                        	"speed": parseFloat(measurement[3]),
-                        	"vibration": parseFloat(measurement[7]),
-                        	"sound": parseFloat(measurement[5]),
-                        	"brightness": parseFloat(measurement[6]),
-                        	"uv": parseFloat("0"), // TO-DO
-                        	"ir": parseFloat("0") // TO-DO
+                            "lng": parseFloat(measurement[2]),
+                            "speed": parseFloat(measurement[3]),
+                            "timestamp": measurement[4],
+                            "sound": parseFloat(measurement[5]),
+                        	"luminosity": parseFloat(measurement[6]),
+                        	"brightness": parseFloat(measurement[7]),
+                            "ir": parseFloat(measurement[8]),
+                            "vibration": parseFloat(measurement[9]),
+                            "altitude": parseFloat(measurement[10]),
                         },
                         async: false,
                         success: function(data) {
