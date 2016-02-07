@@ -159,7 +159,7 @@ void loop() {
       else
       {
         char sz[24];
-        sprintf(sz, "%02d/%02d/%02d %02d:%02d:%02d ",
+        sprintf(sz, "%02d/%02d/%02d %02d:%02d:%02d",
                 month, day, year, hour, minute, second);
         //Serial.print(sz);
         dattim = String(sz);
