@@ -11,3 +11,14 @@ function getMapboxAccessToken() {
 function getURL() {
     return "http://localhost:8080/api";
 }
+
+// CONSTANT VARIABLES FOR THE ROAD CONDITIONS
+function getMinSpeed(){
+    return 10;
+};
+function getMinVibration(){
+    return 0.865;
+};
+function getMaxVibration(){
+    return 1.135;
+}

@@ -1,10 +1,5 @@
 "use strict"
 
-// CONSTANT VARIABLES FOR THE ROAD CONDITIONS
-var minSpeed     = 10,
-    minVibration =  0.8,
-    maxVibration =  1.2;
-
 // MAP
 $( document ).ready(function() {
 
@@ -268,7 +263,7 @@ $( document ).ready(function() {
 
     // CALCULATE ROAD CONDITION ICON
     function calcRoadConditionIcon(speed, vibration) {
-        if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
+        if (speed > getMinSpeed() && vibration < getMaxVibration() && vibration > getMinVibration()) {
             // Perfect Cycling Road
             return "#00FF00";
         } else {
@@ -279,7 +274,7 @@ $( document ).ready(function() {
 
     // IS ROAD IN PERFECT CONDITION
     function isPerfectCondition(speed, vibration) {
-        if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
+        if (speed > getMinSpeed() && vibration < getMaxVibration() && vibration > getMinVibration()) {
             // Perfect Cycling Road
             return true;
         } else {
@@ -290,7 +285,7 @@ $( document ).ready(function() {
 
     // IS ROAD IN POOR CONDITION
     function isPoorCondition(speed, vibration) {
-        if (speed > minSpeed && vibration < maxVibration && vibration > minVibration) {
+        if (speed > getMinSpeed() && vibration < getMaxVibration() && vibration > getMinVibration()) {
             // Perfect Cycling Road
             return false;
         } else {
