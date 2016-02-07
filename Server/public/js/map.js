@@ -54,6 +54,16 @@ $( document ).ready(function() {
                                     async: false,
                                     success: function(data) {
                                         track.measurements = data;
+
+                                        // Interpolate the data before the visualization
+                                        if(getInterpolateState){
+                                            track.measurements = interpolate(track.measurements);
+                                        }
+
+                                        // Close gaps in series of "perfect" or "poor" road conditions
+                                        if(getCloseGapsState) {
+                                            track.measurements = closeGaps(track.measurements);
+                                        }
                                     }
                                 });
                             });
@@ -71,12 +81,6 @@ $( document ).ready(function() {
 
         boxes.forEach(function (box, key) {
             box.tracks.forEach(function (track, key) {
-
-                // Interpolate the data before the visualization
-                track.measurements = interpolate(track.measurements);
-
-                // Close gaps in series of "perfect" or "poor" road conditions
-                track.measurements = closeGaps(track.measurements);
 
                 track.measurements.forEach(function (measurement, key) {
 

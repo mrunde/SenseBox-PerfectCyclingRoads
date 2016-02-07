@@ -22,3 +22,13 @@ function getMinVibration(){
 function getMaxVibration(){
     return 1.135;
 }
+
+// INTERPOLATE
+function getInterpolateState(){
+    return true;
+};
+
+// CLOSE GAPS
+function getCloseGapsState(){
+    return true;
+};
