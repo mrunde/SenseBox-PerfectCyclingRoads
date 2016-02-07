@@ -133,6 +133,9 @@ $( document ).ready(function() {
             }
         }).addTo(map);
 
+        // Pan the map so that all markers are visible
+        map.fitBounds(markers.getBounds());
+
         // FILTERS
         var filter = 'all';
         updateMarkers(filter);
