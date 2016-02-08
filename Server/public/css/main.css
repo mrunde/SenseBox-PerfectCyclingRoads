@@ -70,6 +70,9 @@ body {
 .right {
     text-align: right;
 }
+.justify {
+    text-align: justify;
+}
 .middle {
     text-align: center;
 }
