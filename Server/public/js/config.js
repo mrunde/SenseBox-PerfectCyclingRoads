@@ -14,7 +14,7 @@ function getURL() {
 
 // CONSTANT VARIABLES FOR THE ROAD CONDITIONS
 function getMinSpeed(){
-    return 10;
+    return 8;
 };
 function getMinVibration(){
     return 0.865;
