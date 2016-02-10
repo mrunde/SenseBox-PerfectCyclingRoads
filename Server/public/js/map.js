@@ -6,10 +6,9 @@ var boxes;
 
 // REFRESH FUNCTION
 function refreshMap_2() {
-    setTimeout(function() {
-        map.removeLayer(markers);
-        requestData();
-    }, 10);
+    map.removeLayer(markers);
+    markers = [];
+    requestData();
 };
 
 // REQUEST DATA FROM API
@@ -205,7 +204,7 @@ function drawMarkers() {
     });
 
     // Add markers to the map
-    var markers = L.mapbox.featureLayer(geoJsonFeatures, {
+    markers = L.mapbox.featureLayer(geoJsonFeatures, {
         pointToLayer: function(feature, latlon) {
             return L.circleMarker(latlon, {
                 radius: 3,

@@ -41,6 +41,7 @@ function deleteTrack(senseboxId, trackId) {
         success: function(data) {
             $('#tracks tbody').remove();
             loadTrackList(senseboxId);
+            refreshMap_2();
         }
     });
 };
@@ -56,6 +57,7 @@ function deleteAllTracks() {
             $('#tracks tbody').remove();
             var row = '<tr><td colspan="4" class="middle" id="noTracks">- none -</td></tr>'
             $( row ).appendTo( $( "#tracks" ) );
+            refreshMap_2();
         }
     });
 };
@@ -141,6 +143,7 @@ $( document ).ready(function() {
                 $('#senseboxModal').modal('hide');
                 currentSensebox = undefined;
                 checkBoxId();
+                refreshMap_2();
             }
         });
     });
