@@ -65,7 +65,7 @@ function showNone() {
     $('#tracks tbody').remove();
     var row = '<tr><td colspan="4" class="middle" id="noTracks">- none -</td></tr>'
     $( row ).appendTo( $( "#tracks" ) );
-}
+};
 
 // RESET TRACK-MODAL
 function resetTrackModal() {
@@ -74,7 +74,7 @@ function resetTrackModal() {
     $('#newTrackModal').modal('hide');
     $('#selectFile').show();
     $('#loading').hide();
-}
+};
 
 // MANAGE
 $( document ).ready(function() {
@@ -97,7 +97,7 @@ $( document ).ready(function() {
             $( "#boxId" ).html(currentSensebox._id);
             $( "#boxName" ).html(currentSensebox.name);
         }
-    }
+    };
 
     // LOGIN
     $( "#loginButton" ).click(function() {
@@ -197,7 +197,7 @@ $( document ).ready(function() {
         } else {
             alert('FileReader are not supported in this browser!');
         }
-    }
+    };
 
     // CSV-TO-JSON-CONVERTER
     function getAsText(fileToRead) {
@@ -207,12 +207,12 @@ $( document ).ready(function() {
         // Handle errors load
         reader.onload = loadHandler;
         reader.onerror = errorHandler;
-    }
+    };
 
     function loadHandler(event) {
         var csv = event.target.result;
         processData(csv);
-    }
+    };
 
     function processData(csv) {
         var allTextLines = csv.split(/\r\n|\n/);
@@ -230,13 +230,13 @@ $( document ).ready(function() {
         } else {
             console.log("Empty CSV-file");
         }
-    }
+    };
 
     function errorHandler(evt) {
-      if(evt.target.error.name == "NotReadableError") {
-          alert("Canno't read file !");
-      }
-    }
+        if(evt.target.error.name == "NotReadableError") {
+            alert("Canno't read file !");
+        }
+    };
 
     // UPLOAD NEW TRACK
     function uploadTrack(measurements){
@@ -284,6 +284,7 @@ $( document ).ready(function() {
                         }
                     });
                 });
+                refreshMap_2();
             }
         });
     };
