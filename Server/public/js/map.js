@@ -5,14 +5,14 @@ var markers;
 var boxes;
 
 // REFRESH FUNCTION
-function refreshMap_2() {
+function refreshMap() {
     map.removeLayer(markers);
     markers = [];
     requestData();
 };
 
 // REQUEST DATA FROM API
-function requestData(){
+function requestData() {
     $.ajax({
         url: getURL() + "/boxes",
         global: false,
@@ -20,7 +20,7 @@ function requestData(){
         async: false,
         success: function(data) {
             boxes = data;
-            boxes.forEach(function (box, key) {
+            boxes.forEach(function(box, key) {
                 $.ajax({
                     url: getURL() + "/boxes/" + box._id + "/tracks",
                     global: false,
@@ -28,7 +28,7 @@ function requestData(){
                     async: false,
                     success: function(data) {
                         box.tracks = data;
-                        box.tracks.forEach(function (track, key) {
+                        box.tracks.forEach(function(track, key) {
                             $.ajax({
                                 url: getURL() + "/boxes/" + box._id + "/tracks/" + track._id + "/measurements",
                                 global: false,
@@ -38,12 +38,12 @@ function requestData(){
                                     track.measurements = data;
 
                                     // Interpolate the data before the visualization
-                                    if(getInterpolateState){
+                                    if (getInterpolateState) {
                                         track.measurements = interpolate(track.measurements);
                                     }
 
                                     // Close gaps in series of "perfect" or "poor" road conditions
-                                    if(getCloseGapsState) {
+                                    if (getCloseGapsState) {
                                         track.measurements = closeGaps(track.measurements);
                                     }
                                 }
@@ -69,17 +69,17 @@ function interpolate(measurements) {
 
     // Interpolate the measurements
     for (var i = range; i < measurements.length - range; i++) {
-        var interpolSpeed     = 0,
+        var interpolSpeed = 0,
             interpolVibration = 0,
-            divider           = 0;
+            divider = 0;
 
         for (var j = 0; j < range; j++) {
-            interpolSpeed     = interpolSpeed + factors[j] * measurements[i-j].speed;
-            interpolVibration = interpolVibration + factors[j] * measurements[i-j].vibration;
-            divider           = divider + factors[j];
+            interpolSpeed = interpolSpeed + factors[j] * measurements[i - j].speed;
+            interpolVibration = interpolVibration + factors[j] * measurements[i - j].vibration;
+            divider = divider + factors[j];
         }
 
-        measurements[i].speed     = interpolSpeed / divider;
+        measurements[i].speed = interpolSpeed / divider;
         measurements[i].vibration = interpolVibration / divider;
     }
 
@@ -94,29 +94,28 @@ function closeGaps(measurements) {
     var range = 2;
 
     for (var i = range; i < measurements.length - range; i++) {
-        var gap               = true,
-            current           = isPerfectCondition(measurements[i].speed, measurements[i].vibration),
-            previous          = isPerfectCondition(measurements[i-1].speed, measurements[i-1].vibration),
-            next              = isPerfectCondition(measurements[i+1].speed, measurements[i+1].vibration),
-            interpolSpeed     = 0,
+        var gap = true,
+            current = isPerfectCondition(measurements[i].speed, measurements[i].vibration),
+            previous = isPerfectCondition(measurements[i - 1].speed, measurements[i - 1].vibration),
+            next = isPerfectCondition(measurements[i + 1].speed, measurements[i + 1].vibration),
+            interpolSpeed = 0,
             interpolVibration = 0;
 
         // Check whether a gap might exist before running the code
         if (current != previous && current != next) {
             for (var j = -range; j < range && gap; j++) {
                 if (j != 0) {
-                    if (current != isPerfectCondition(measurements[i-range].speed, measurements[i-range].vibration)) {
+                    if (current != isPerfectCondition(measurements[i - range].speed, measurements[i - range].vibration)) {
                         gap = false;
                         break;
                     } else {
-                        interpolSpeed     = interpolSpeed + measurements[i-range].speed;
-                        interpolVibration = interpolVibration + measurements[i-range].vibration;
+                        interpolSpeed = interpolSpeed + measurements[i - range].speed;
+                        interpolVibration = interpolVibration + measurements[i - range].vibration;
                     }
                 }
             }
-
             if (gap) {
-                measurements[i].speed     = interpolSpeed / (range * 2);
+                measurements[i].speed = interpolSpeed / (range * 2);
                 measurements[i].vibration = interpolVibration / (range * 2);
             }
         }
@@ -163,42 +162,39 @@ function drawMarkers() {
 
     var geoJsonFeatures = [];
 
-    boxes.forEach(function (box, key) {
-        box.tracks.forEach(function (track, key) {
+    boxes.forEach(function(box, key) {
+        box.tracks.forEach(function(track, key) {
 
-            track.measurements.forEach(function (measurement, key) {
+            track.measurements.forEach(function(measurement, key) {
 
-                geoJsonFeatures.push(
-                    {
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: [
-                                measurement.lng, measurement.lat,
-                            ]
-                        },
-                        'properties': {
-                            'title': '<h5><span class="label label-warning">' + box._id + '</span> <small>BoxId</small></h5>' +
-                                '<h5><span class="label label-success">' + track._id + '</span> <small>TrackId</small></h5>',
-                            'description': '<div class="panel panel-default"><table class="table table-striped">' +
-                                '<tr><th>Timestamp</th><td>' + measurement.timestamp + '</td></tr>' +
-                                '<tr><th>Longitude</th><td>' + measurement.lng + ' °</td></tr>' +
-                                '<tr><th>Latitude</th><td>' + measurement.lat + ' °</td></tr>' +
-                                '<tr><th>Altitude</th><td>' + measurement.altitude.toFixed(2) + ' m</td></tr>' +
-                                '<tr><th>Speed</th><td>' + measurement.speed.toFixed(2) + ' km/h</td></tr>' +
-                                '<tr><th>Vibration</th><td>' + measurement.vibration.toFixed(4) + ' g</td></tr>' +
-                                '<tr><th>Sound</th><td>' + measurement.sound + ' dB</td></tr>' +
-                                '<tr><th>Luminosity</th><td>' + measurement.luminosity + '</td></tr>' +
-                                '<tr><th>Brightness</th><td>' + measurement.brightness + '</td></tr>' +
-                                '<tr><th>IR</th><td>' + measurement.ir + '</td></tr>' +
-                                '</table></div>',
-                            'perfect': isPerfectCondition(measurement.speed, measurement.vibration),
-                            'poor': isPoorCondition(measurement.speed, measurement.vibration),
-                            'fillColor': calcRoadConditionIcon(measurement.speed, measurement.vibration),
-                            'color': calcRoadConditionIcon(measurement.speed, measurement.vibration)
-                        }
+                geoJsonFeatures.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [
+                            measurement.lng, measurement.lat,
+                        ]
+                    },
+                    'properties': {
+                        'title': '<h5><span class="label label-success">' + track._id + '</span> <small>TrackId</small></h5>',
+                        'description': '<div class="panel panel-default"><table class="table table-striped">' +
+                            '<tr><th>Timestamp</th><td>' + measurement.timestamp + '</td></tr>' +
+                            '<tr><th>Longitude</th><td>' + measurement.lng + ' °</td></tr>' +
+                            '<tr><th>Latitude</th><td>' + measurement.lat + ' °</td></tr>' +
+                            '<tr><th>Altitude</th><td>' + measurement.altitude.toFixed(2) + ' m</td></tr>' +
+                            '<tr><th>Speed</th><td>' + measurement.speed.toFixed(2) + ' km/h</td></tr>' +
+                            '<tr><th>Vibration</th><td>' + measurement.vibration.toFixed(4) + ' g</td></tr>' +
+                            '<tr><th>Sound</th><td>' + measurement.sound + ' dB</td></tr>' +
+                            '<tr><th>Luminosity</th><td>' + measurement.luminosity + '</td></tr>' +
+                            '<tr><th>Brightness</th><td>' + measurement.brightness + '</td></tr>' +
+                            '<tr><th>IR</th><td>' + measurement.ir + '</td></tr>' +
+                            '</table></div>',
+                        'perfect': isPerfectCondition(measurement.speed, measurement.vibration),
+                        'poor': isPoorCondition(measurement.speed, measurement.vibration),
+                        'fillColor': calcRoadConditionIcon(measurement.speed, measurement.vibration),
+                        'color': calcRoadConditionIcon(measurement.speed, measurement.vibration)
                     }
-                );
+                });
             });
         });
     });
@@ -224,24 +220,24 @@ function drawMarkers() {
     var filter = 'all';
     updateMarkers(filter);
 
-    $( '#filter_all' ).on('click', function() {
-        $( '#filter_all' ).removeClass('btn-default').addClass('btn-primary');
-        $( '#filter_perfect' ).removeClass('btn-primary').addClass('btn-default');
-        $( '#filter_poor' ).removeClass('btn-primary').addClass('btn-default');
+    $('#filter_all').on('click', function() {
+        $('#filter_all').removeClass('btn-default').addClass('btn-primary');
+        $('#filter_perfect').removeClass('btn-primary').addClass('btn-default');
+        $('#filter_poor').removeClass('btn-primary').addClass('btn-default');
         updateMarkers('all');
     });
 
-    $( '#filter_perfect' ).on('click', function() {
-        $( '#filter_all' ).removeClass('btn-primary').addClass('btn-default');
-        $( '#filter_perfect' ).removeClass('btn-default').addClass('btn-primary');
-        $( '#filter_poor' ).removeClass('btn-primary').addClass('btn-default');
+    $('#filter_perfect').on('click', function() {
+        $('#filter_all').removeClass('btn-primary').addClass('btn-default');
+        $('#filter_perfect').removeClass('btn-default').addClass('btn-primary');
+        $('#filter_poor').removeClass('btn-primary').addClass('btn-default');
         updateMarkers('perfect');
     });
 
-    $( '#filter_poor' ).on('click', function() {
-        $( '#filter_all' ).removeClass('btn-primary').addClass('btn-default');
-        $( '#filter_perfect' ).removeClass('btn-primary').addClass('btn-default');
-        $( '#filter_poor' ).removeClass('btn-default').addClass('btn-primary');
+    $('#filter_poor').on('click', function() {
+        $('#filter_all').removeClass('btn-primary').addClass('btn-default');
+        $('#filter_perfect').removeClass('btn-primary').addClass('btn-default');
+        $('#filter_poor').removeClass('btn-default').addClass('btn-primary');
         updateMarkers('poor');
     });
 
@@ -258,7 +254,7 @@ function drawMarkers() {
 };
 
 // MAP
-$( document ).ready(function() {
+$(document).ready(function() {
 
     // INIT
     L.mapbox.accessToken = getMapboxAccessToken();
@@ -271,47 +267,8 @@ $( document ).ready(function() {
         'Satellite': L.mapbox.tileLayer('mapbox.satellite')
     }).addTo(map);
 
-    boxes = [];
+    boxes =   [];
     markers = [];
     requestData();
-
-
-    // MAP-FUNCTION
-    /*map.on('zoomend', function() {
-        // TO-DO - not working
-        if (map.getZoom() >= 14) {
-            map.featureLayer.setFilter(function() { return true; });
-        } else {
-            map.featureLayer.setFilter(function() { return false; });
-        }
-    });*/
-
-
-        /* MAP REFRESHING
-        // ...for new tracks
-        $( '#submitTrackButton' ).on('click', function() {
-            console.log("submitTrackButton");
-            refreshMap();
-        });
-        // ...for deleted boxes
-        $( '#deleteSensebox' ).on('click', function() {
-            refreshMap();
-        });
-        // ...for deleted tracks (single and all)
-        // TODO works only for deleting all tracks so far
-        $( '[id^="delete"]' ).each(function() {
-            $(this).on('click', function() {
-                refreshMap();
-            });
-        });
-
-        // REFRESH FUNCTION
-        function refreshMap() {
-            setTimeout(function() {
-                map.removeLayer(markers);
-                requestData();
-            }, 10);
-        }
-    };*/
 
 });

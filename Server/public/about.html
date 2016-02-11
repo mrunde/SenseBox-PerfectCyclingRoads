@@ -1,96 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="This application was build during the course &quot;An Introduction into Perfect Cycling Roads &quot;">
-    <meta name="author" content="Nicholas Schiestel, Marius Runde, Lukas Lohoff">
-    <!-- <link rel="icon" href="../../favicon.ico">-->
-    <title>SenseBox - Perfect Cycling Roads</title>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="This application was build during the course &quot;An Introduction into Perfect Cycling Roads &quot;">
+        <meta name="author" content="Nicholas Schiestel, Marius Runde, Lukas Lohoff">
+        <link rel="icon" href="favicon.ico">
+        <title>SenseBox - Perfect Cycling Roads</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Font-Awesome -->
-    <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <!-- Font-Awesome -->
+        <link href="lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 
-    <!-- Own CSS -->
-    <link href="css/main.css" rel="stylesheet">
-</head>
-<body cz-shortcut-listen="true">
+        <!-- Own CSS -->
+        <link href="css/main.css" rel="stylesheet">
+    </head>
+    <body cz-shortcut-listen="true">
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Perfect Cycling Roads</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="index.html"><i class="fa fa-home"></i></span>&nbsp;&nbsp;Map</a></li>
-                <li class="active"><a href="about.html"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;About</a></li>
-                <li><a href="license.html"><i class="fa fa-key"></i>&nbsp;&nbsp;License</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="container-fluid">
-
-    <div class="content middle">
-        <h1>Project</h1>
-        <br>
-        <div class="row">
-            <div class="col-xs-1"></div>
-            <div class="col-xs-10 justify">
-                <p>This project is part of the course <b>SenseBox for People-Centered Urban Planning</b> at the <a href="https://www.uni-muenster.de/Geoinformatics/" target="_blank">Institute for Geoinformatics, Münster</a>, which took place in winter term 2015/16.</p><br>
-                <p>SenseBox is a hardware and software platform designed to empower citizens by providing them easy access to (geo)data-gathering and (geo)data-processing. The arduino-based hardware can be easily customised to include a variety of sensors. In the typical use-case, a pre-assembled SenseBox is sent directly to the final user who customises simple computer code and starts contributing geo-tagged data to the community.</p>
-                <p>This application focuses on bicycling roads, which are presented on a map with perfect or bad conditions. A user can measure cycling tracks, which are recorded on a SenseBox and his bike. After the collection, the data can be easly uploaded and shared with the community.</p>
-                <p>If you want to test this application, please follow the instructions, which can be found on GitHub. The Arduino-Sketch for the SenseBox and all requirements can also found there: <a href="https://github.com/mrunde/SenseBox-PerfectCyclingRoads" target="_blank">https://github.com/mrunde/SenseBox-PerfectCyclingRoads</a>
-                </p>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Perfect Cycling Roads</a>
+                </div>
+                <div id="navbar" class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="index.html">
+                                <i class="fa fa-home"></i>
+                            </span>&nbsp;&nbsp;Map</a>
+                    </li>
+                    <li class="active">
+                        <a href="about.html">
+                            <i class="fa fa-info-circle"></i>&nbsp;&nbsp;About</a>
+                    </li>
+                    <li>
+                        <a href="license.html">
+                            <i class="fa fa-key"></i>&nbsp;&nbsp;License</a>
+                    </li>
+                </ul>
             </div>
-            <div class="col-xs-1"></div>
         </div>
-        <h3>Developer</h3>
-        <br>
-        <div class="row">
-            <div class="col-xs-1"></div>
-            <div class="col-xs-10">
-                <div class="row">
-                    <div class="col-md-4">
-                        <img src="img/user.png" alt="user" class="img-circle imgBorder"><br>
-                        <h4>Lukas Lohoff</h4>
-                        <i class="fa fa-github"></i>&nbsp;&nbsp;<a href="https://github.com/LukasLohoff" target="_blank">LukasLohoff</a>
-                    </div>
-                    <div class="col-md-4">
-                        <img src="img/user.png" alt="user" class="img-circle imgBorder"><br>
-                        <h4>Marius Runde</h4>
-                        <i class="fa fa-github"></i>&nbsp;&nbsp;<a href="https://github.com/mrunde" target="_blank">mrunde</a>
-                    </div>
-                    <div class="col-md-4">
-                        <img src="img/user.png" alt="user" class="img-circle imgBorder"><br>
-                        <h4>Nicholas Schiestel</h4>
-                        <i class="fa fa-github"></i>&nbsp;&nbsp;<a href="https://github.com/nicho90" target="_blank">nicho90</a>
+    </nav>
+    <div class="container-fluid">
+
+        <div class="content middle">
+            <h1>Project</h1>
+            <br>
+            <div class="row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10 justify">
+                    <p>This project is part of the course
+                        <b>SenseBox for People-Centered Urban Planning</b>
+                        at the
+                        <a href="https://www.uni-muenster.de/Geoinformatics/" target="_blank">Institute for Geoinformatics, Münster</a>, which took place in winter term 2015/16.</p><br>
+                    <p>SenseBox is a hardware and software platform designed to empower citizens by providing them easy access to (geo)data-gathering and (geo)data-processing. The arduino-based hardware can be easily customised to include a variety of sensors. In the typical use-case, a pre-assembled SenseBox is sent directly to the final user who customises simple computer code and starts contributing geo-tagged data to the community.</p>
+                    <p>This application focuses on bicycling roads, which are presented on a map with perfect or bad conditions. A user can measure cycling tracks, which are recorded on a SenseBox and his bike. After the collection, the data can be easly uploaded and shared with the community.</p>
+                    <p>If you want to test this application, please follow the instructions, which can be found on GitHub. The Arduino-Sketch for the SenseBox and all requirements can also found there:
+                        <a href="https://github.com/mrunde/SenseBox-PerfectCyclingRoads" target="_blank">https://github.com/mrunde/SenseBox-PerfectCyclingRoads</a>
+                    </p>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+            <h3>Developer</h3>
+            <br>
+            <div class="row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="img/user.png" alt="user" class="img-circle imgBorder"><br>
+                            <h4>Lukas Lohoff</h4>
+                            <i class="fa fa-github"></i>&nbsp;&nbsp;
+                            <a href="https://github.com/LukasLohoff" target="_blank">LukasLohoff</a>
+                        </div>
+                        <div class="col-md-4">
+                            <img src="img/user.png" alt="user" class="img-circle imgBorder"><br>
+                            <h4>Marius Runde</h4>
+                            <i class="fa fa-github"></i>&nbsp;&nbsp;
+                            <a href="https://github.com/mrunde" target="_blank">mrunde</a>
+                        </div>
+                        <div class="col-md-4">
+                            <img src="img/user.png" alt="user" class="img-circle imgBorder"><br>
+                            <h4>Nicholas Schiestel</h4>
+                            <i class="fa fa-github"></i>&nbsp;&nbsp;
+                            <a href="https://github.com/nicho90" target="_blank">nicho90</a>
+                        </div>
                     </div>
                 </div>
+                <div class="col-xs-1"></div>
             </div>
-            <div class="col-xs-1"></div>
         </div>
+
     </div>
 
-</div>
-
-<!-- Bootstrap core JavaScript
+    <!-- Bootstrap core JavaScript
 ================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="lib/jquery/dist/jquery.min.js"></script>
-<script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
-
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="lib/jquery/dist/jquery.min.js"></script>
+    <script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
 
 </body>
 </html>
