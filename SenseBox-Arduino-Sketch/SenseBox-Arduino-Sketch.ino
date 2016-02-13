@@ -3,6 +3,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <Wire.h>
+#include "Barometer.h"
 #include "I2Cdev.h"
 #include "MPU9150.h"
 #include <Adafruit_Sensor.h>
@@ -13,8 +14,13 @@ const int chipSelect = 4;
 const int soundSensor = A0;
 
 //Light sensor variables
-Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591); // pass in a number for the sensor identifier (for your use later)
+Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
 uint16_t ir, full;
+
+//Barometer variables
+float pressure;
+float atm;
+Barometer myBarometer;
 
 //Accelerometer variables
 MPU9150 accelgyro;
@@ -31,7 +37,7 @@ int rowCounter = 1;
 SoftwareSerial ss(2, 3);
 
 //Button variables
-const int buttonPin = 8;// the number of the pushbutton pin
+const int buttonPin = 8;
 int buttonState = 0;
 int lastButtonState = 0;
 int isOn;
@@ -50,19 +56,29 @@ void setup() {
   //Initialize Accelerometer
   accelgyro.initialize();
   TWBR = 12; // set 400kHz mode @ 16MHz CPU or 200kHz mode @ 8MHz CPU
-  //accelgyro.setFullScaleAccelRange(MPU9150_ACCEL_FS_16);
-  //ln(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
+
+  /**
+  *  Most serial messages are commented out to save memory.
+  *  To debug the program, enable them again. Use F("string")
+  *  to store strings in flash memory. Around 390 bytes of
+  *  dynamic memory have to be available after compilation,
+  *  otherwise the SD card won't work.
+  **/
+
+  //Serial.println(accelgyro.testConnection() ? F("MPU6050 connection successful") : F("MPU6050 connection failed"));
 
   delay(1000);
 
   // Initialize Light Sensor
-  //Init light sensor
   tsl.begin();
-  tsl.setGain(TSL2591_GAIN_HIGH);   // 428x gain
-  tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time (bright light)
+  tsl.setGain(TSL2591_GAIN_HIGH);     // 428x gain (will only work at low luminosity)
+  tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);  // shortest integration time
+
+  //Init barometer
+  myBarometer.init();
 
   // Initalize SD card:
-  //Serial.print("init sd card...");
+  //Serial.print("Initialize SD card...");
 
   if (!SD.begin(chipSelect)) {
     //Serial.println("Card failed, or not present");
@@ -76,19 +92,18 @@ void setup() {
   pinMode(soundSensor, INPUT);
   pinMode(buttonPin, INPUT);
 
-  //Serial.println(F(FreeRam()));
   dataFile = SD.open("test.csv", FILE_WRITE);
 
   // If the file opened okay, write to it:
   if (dataFile) {
-    //Serial.print("Writing to test.txt...");
-    dataFile.println("row,lat,lon,speed,timestamp,sound,luminosity,lux,ir,vibration");
-    // close the file:
+    //Serial.print("Writing header test.csv...");
+    dataFile.println("row,lat,lon,speed,timestamp,sound,luminosity,lux,ir,vibration,altitude");
+    // Close the file:
     dataFile.close();
     //Serial.println("done.");
   } else {
     // if the file didn't open, print an error:
-    Serial.println(F("error opening test.txt"));
+    Serial.println(F("Error opening test.csv"));
   }
 }
 
@@ -109,6 +124,8 @@ void loop() {
   }
   lastButtonState = buttonState;
 
+  // LED is OFF if data is being recorded.
+  // This is to avoid light from the LED influencing the light sensor.
   if (isOn == 1) {
     digitalWrite(LED, LOW);
     bool newData = false;
@@ -150,7 +167,7 @@ void loop() {
 
       // Serial.println("DATE & TIME:");
 
-      // print date
+      // Print date
       int year;
       byte month, day, hour, minute, second, hundredths;
       gps.crack_datetime(&year, &month, &day, &hour, &minute, &second, &hundredths, &age);
@@ -169,8 +186,6 @@ void loop() {
       // GPS reading done
       newData = false;
 
-      //Accel/Gyro
-      
       //Light sensor
       uint32_t lum = tsl.getFullLuminosity();
       ir = lum >> 16;
@@ -195,12 +210,15 @@ void loop() {
         dataFile.print(seperator);
         dataFile.print(tsl.getLuminosity(TSL2591_VISIBLE));
         dataFile.print(seperator);
-        dataFile.print(tsl.calculateLux(full,ir));
+        dataFile.print(tsl.calculateLux(full, ir));
         dataFile.print(seperator);
         dataFile.print(ir);
         dataFile.print(seperator);
-        dataFile.println(((double) accelgyro.getAccelerationZ()/16384), 4);
+        dataFile.print(((double) accelgyro.getAccelerationZ() / 16384), 4);
+        dataFile.print(seperator);
+        dataFile.println(myBarometer.calcAltitude(myBarometer.bmp085GetPressure(myBarometer.bmp085ReadUP())));
 
+        //Serial.println(accelgyro.getAccelerationZ());
         // close the file:
         dataFile.close();
 
