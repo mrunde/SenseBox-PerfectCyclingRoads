@@ -1,11 +1,24 @@
 # SenseBox - Perfect Racing Bicycle Roads
+
 Finding the perfect cycling roads for your racing bicycle training or trip as part of the SenseBox study project at the Institute for Geoinformatics, Münster
+
+![Application](Server/public/img/application.png)
 
 ***
 
-The MIT License (MIT)
+## Content of this repository
 
-Copyright (c) 2016 Lukas Lohoff, Marius Runde, Nicholas Schiestel
+* Webserver & Client (Administration & Visualization) 
+* [Install instructions](Server/README.md) (for Webserver & Client)
+* [REST-API](API.md) (Documentation)
+* Arduino-Sketch
+* Recorded Test-Data (CSV-files)
+
+***
+
+### The MIT License (MIT)
+
+**Copyright (c) 2016 Lukas Lohoff, Marius Runde, Nicholas Schiestel**
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
