@@ -1,6 +1,8 @@
 # SenseBox - Perfect Racing Bicycle Roads
 
-Finding the perfect cycling roads for your racing bicycle training or trip as part of the SenseBox study project at the Institute for Geoinformatics, Münster
+This project is part of the course *SenseBox for People-Centered Urban Planning* at the Institute for Geoinformatics, Münster, which took place in winter term 2015/16.
+
+With the help of the [SenseBox](http://www.sensebox.de) we implemented an application for enthusiastic cyclists to find the perfect cycling roads for your next racing bicycle training or trip. Red dots indicates bad conditions, e.g. bumpy roads and/or slow speed. Green dots represents good cycling conditions. The application is based on crowd-sourcing, so citizens can measure everytime they ride their biciclyes and upload their measurements to the cloud. The application visualizes the tracks and calculates the cycling conditions. Based on the data, other people can plan their next trip and find betters ways for cycling. 
 
 ![Application](Server/public/img/application.png)
 
@@ -13,6 +15,14 @@ Finding the perfect cycling roads for your racing bicycle training or trip as pa
 * [REST-API](API.md) (Documentation)
 * Arduino-Sketch
 * Recorded Test-Data (CSV-files)
+
+***
+
+## Contributors
+
+##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Marius Runde](https://github.com/mrunde)
+##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Nicholas Schiestel](https://github.com/nicho90)
+##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Lukas Lohoff](https://github.com/LukasLohoff)
 
 ***
 
