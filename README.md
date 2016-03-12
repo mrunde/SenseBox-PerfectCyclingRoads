@@ -8,7 +8,7 @@ With the help of the [SenseBox](http://www.sensebox.de) we implemented an applic
 
 ***
 
-## Content of this repository
+### Content of this repository
 
 * Webserver & Client (Administration & Visualization) 
 * [Install instructions](Server/README.md) (for Webserver & Client)
@@ -18,7 +18,7 @@ With the help of the [SenseBox](http://www.sensebox.de) we implemented an applic
 
 ***
 
-## Contributors
+### Contributors
 
 ##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Marius Runde](https://github.com/mrunde)
 ##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Nicholas Schiestel](https://github.com/nicho90)
