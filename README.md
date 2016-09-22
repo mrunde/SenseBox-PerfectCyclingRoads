@@ -20,9 +20,9 @@ With the help of the [SenseBox](http://www.sensebox.de) we implemented an applic
 
 ### Contributors
 
-##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Marius Runde](https://github.com/mrunde)
-##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Nicholas Schiestel](https://github.com/nicho90)
-##### ![alt GitHub](http://i.imgur.com/0o48UoR.png") [Lukas Lohoff](https://github.com/LukasLohoff)
+:octocat: [Marius Runde](https://github.com/mrunde)<br>
+:octocat: [Nicholas Schiestel](https://github.com/nicho90)<br>
+:octocat: [Lukas Lohoff](https://github.com/LukasLohoff)<br>
 
 ***
 
